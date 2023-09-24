@@ -32,6 +32,9 @@
                         <a class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('create.fight') }}">Fight</a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>

@@ -38,6 +38,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function games()
+    {
+        return $this->belongsToMany(Game::class, 'games_users');
+    }
+
     public function fighters() {
         return $this->hasMany(Fighter::class);
     }
