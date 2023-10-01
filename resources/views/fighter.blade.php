@@ -14,7 +14,7 @@
             <link rel="stylesheet" href="../css/card.css">
         </head>
 
-        <body>
+        <body class="bg-dark text-white">
 
             @include('partials.navbar')
 

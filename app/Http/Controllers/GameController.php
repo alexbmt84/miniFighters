@@ -41,7 +41,7 @@ class GameController extends Controller
         if (!$game->users->contains(auth()->id())) {
             $game->users()->attach(auth()->id());
 
-            event(new GameEvent(['message' => 'Un nouveau joueur a rejoint la salle!', 'code' => $game->code, 'newPlayerName' => auth()->user()->name]));
+            event(new GameEvent(['message' => 'Un nouveau joueur a rejoint la salle!', 'code' => $game->code, 'newPlayerName' => auth()->user()->name, 'level' => auth()->user()->level]));
 
         }
 
@@ -57,16 +57,13 @@ class GameController extends Controller
 
             $game->users()->attach(auth()->id());
 
-            event(new GameEvent(['message' => 'Un nouveau joueur a rejoint la salle!', 'code' => $game->code, 'newPlayerName' => auth()->user()->name]));
+            event(new GameEvent(['message' => 'Un nouveau joueur a rejoint la salle!', 'code' => $game->code, 'newPlayerName' => auth()->user()->name, 'level' => auth()->user()->level]));
 
         }
 
 
         return view('fight', ['game' => $game]);
     }
-
-
-
 
 
 }

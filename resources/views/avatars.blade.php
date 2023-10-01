@@ -14,9 +14,12 @@
         <link rel="stylesheet" href="./css/card.css">
     </head>
 
-    <body>
+    <body class="" style="background: rgb(33,33,33);
+background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba(51,41,60,1) 100%); height: 100vh">
 
         @include('partials.navbar')
+
+        <h1 class="text-white text-center mt-5 mb-5">Avatars</h1>
 
         <main>
 

@@ -28,6 +28,10 @@ class GameEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
+        if (isset($this->message['type']) && $this->message['type'] === 'player_left') {
+            return 'player_left';
+        }
         return 'Fight';
     }
+
 }

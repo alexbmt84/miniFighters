@@ -12,12 +12,17 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
             <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
             <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+            <style>
+                .navbar {
+                    border-bottom: 2px solid white;
+                }
+            </style>
             <script>
 
                 document.addEventListener("DOMContentLoaded", function(event) {
 
+                    // Pusher setup
                     Pusher.logToConsole = true;
-
                     var gameCode = '{{ $game->code }}';
 
                     var pusher = new Pusher('ec80d36be857ebfe0e5a', {
@@ -32,32 +37,32 @@
 
                     var channel = pusher.subscribe('private-miniFighters.' + gameCode);
 
+                    // Binding for Fight event
                     channel.bind('Fight', function(data) {
-
                         console.log(data.message);
-
                         var playerName = data.message.newPlayerName;
-
                         var li = document.createElement('li');
                         li.textContent = playerName;
-
+                        var level = data.message.level;
+                        var li2 = document.createElement('li');
+                        li2.textContent = "Level " + level;
                         document.getElementById('playerList').appendChild(li);
-
+                        document.getElementById('playerList').appendChild(li2);
                         alert(JSON.stringify(data.message));
-
                     });
 
+                    // Global event for logging (if necessary)
                     channel.bind_global(function(event, data) {
                         console.log("Event received: ", event, data);
                     });
 
-
                 });
+
 
             </script>
         </head>
 
-        <body>
+        <body class="bg-dark text-white">
 
             @include('partials.navbar')
 
@@ -65,13 +70,14 @@
 
                 <div>
 
-                    <h1 class="text-center">Arena</h1>
+                    <h1 class="text-center mt-5 mb-5">Arena</h1>
 
-                    <h2 class="text-center mt-3">Room code : {{ $game->code }}</h2>
+                    <h2 class="text-center">Room code : {{ $game->code }}</h2>
 
                     <ul id="playerList" class="text-center mt-3" style="list-style-type: none; font-size: 28px; font-weight: bold">
                         @foreach($game->users as $user)
                             <li class="text-center">{{ $user->name }}</li>
+                            <li class="text-center">Level {{ $user->level }}</li>
                         @endforeach
                     </ul>
 

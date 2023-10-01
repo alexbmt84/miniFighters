@@ -43,6 +43,58 @@ class AvatarController extends Controller
 
     }
 
+    private function getOpenAIResponse($prompt)
+    {
+        $client = new Client();
+
+        $response = $client->post('https://api.openai.com/v1/chat/completions', [
+            'headers' => [
+                'Authorization' => 'Bearer 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',
+                'Content-Type' => 'application/json'
+            ],
+            'json' => [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [['role' => 'user', 'content' => $prompt]],
+                'temperature' => 0.7
+            ]
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($data['choices'][0]['message']['content'])) {
+            return $data['choices'][0]['message']['content'];
+        }
+
+        return null;
+    }
+
+    public function generateAvatarDescription($text) {
+
+        $client = new Client([
+            'verify' => false  // Désactiver la vérification SSL si nécessaire
+        ]);
+
+        $response = $client->post('https://api.deepai.org/api/text-generator', [
+            'headers' => [
+                'api-key' => 'd3cbe5fd-4117-4e37-ae34-b6373fe6f93e'
+            ],
+            'multipart' => [
+                [
+                    'name'     => 'text',
+                    'contents' => $text
+                ]
+            ]
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+
+        if (isset($data['output'])) {
+            return $data['output'];
+        }
+        return null;
+    }
+
     function generateUniqueString($longueur = 12) {
         $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $chaineAleatoire = '';
@@ -65,8 +117,39 @@ class AvatarController extends Controller
 
     }
 
+    public function generateFantasyAvatar($text) {
 
-public function store(Request $request) {
+        $type = "superhero";
+
+        $client = new Client([
+            'verify' => false  // Désactiver la vérification SSL si nécessaire
+        ]);
+
+        $response = $client->post('https://api.deepai.org/api/cyber-beast-generator', [
+            'headers' => [
+                'api-key' => 'd3cbe5fd-4117-4e37-ae34-b6373fe6f93e'
+            ],
+            'multipart' => [
+                [
+                    'name'     => 'text',
+                    'contents' => $text
+                ],
+                [
+                    'name'     => 'grid_size',
+                    'contents' => '1'
+                ]
+            ]
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($data['output_url'])) {
+            return file_get_contents($data['output_url']);
+        }
+        return null;
+    }
+
+    public function store(Request $request) {
 
     $user = auth()->user();
     $userId =$user->id;
@@ -78,10 +161,18 @@ public function store(Request $request) {
     $user->wallet -= 200;
     $user->save();
 
+    // With unique string for MultiAvatars
     $uniqueName = $this->generateUniqueString();
+
     $name = $request->input('name');
 
-    $avatarData = $this->generateAvatar($uniqueName);
+    $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+    $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
+
+    $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
+    $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
+
+    $avatarData = $this->generateFantasyAvatar($specialDescription);
 
     // Enregistrement temporaire des données de l'avatar
     $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
@@ -129,6 +220,7 @@ public function store(Request $request) {
         'attack_damages_1' => $firstAttack,
         'attack_damages_2' => $secondAttack,
         'user_id' => $userId,
+        'description' => $translateDescription
     ]);
 
     return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter'));

@@ -47,6 +47,9 @@ Route::post('/arena/join', [GameController::class, 'joinWithCode'])->name('game.
 
 Route::get('/fight', [GameController::class, 'index'])->name('create.fight');
 
+Route::post('/game/leave/{code}', [GameController::class, 'leave'])->name('game.leave');
+
+
 Route::middleware(['web'])->group(function () {
 
     Broadcast::routes();
