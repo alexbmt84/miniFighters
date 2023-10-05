@@ -15,7 +15,7 @@
     </head>
 
     <body class="" style="background: rgb(33,33,33);
-background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba(51,41,60,1) 100%); height: 100vh">
+background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba(51,41,60,1) 100%);">
 
         @include('partials.navbar')
 
@@ -32,7 +32,9 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <p class="title">{{$fighter->name}}</p>
+                                    <div class="fighter-name">
+                                        <p class="title">{{$fighter->name}}</p>
+                                    </div>
                                     <img class="fighterAvatar" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
                                     <p class="hp">{{ $fighter->hp }} PV</p>
                                 </div>

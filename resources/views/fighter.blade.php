@@ -10,8 +10,8 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
             <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-            <link rel="stylesheet" href="./css/main.css">
-            <link rel="stylesheet" href="../css/card.css">
+            <link rel="stylesheet" href="../css/main.css">
+            <link rel="stylesheet" href="../css/bigcard.css">
         </head>
 
         <body class="bg-dark text-white">
@@ -20,18 +20,25 @@
 
             <main class="d-flex flex-column align-items-center">
 
-                <h1 class="mt-5">{{ $name }}</h1>
+{{--                <h1 class="mt-5">{{ $name }}</h1>--}}
 
-                <div class="fighterContainer mt-5">
+                <div class="fighterContainer2 mt-5">
 
-                    <a href="{{ route('fighter', $fighter->id) }}">
+                    <a class="fighter-link">
 
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <p class="title">{{$fighter->name}}</p>
-                                    <img class="fighterAvatar" src="{{ $avatar }}" alt="Generated Avatar">
-                                    <p class="hp">{{ $fighter->hp }} PV</p>
+                                    <div class="avatar-container">
+                                        <img class="fighterAvatar2" src="{{ $avatar }}" alt="Generated Avatar">
+                                    </div>
+                                    <div class="text-container">
+                                        <p class="title">{{$fighter->name}}</p>
+                                        <p class="hp mt-3">{{ $fighter->hp }} PV</p>
+                                        <p class="att">{{ $fighter->attack_name_1 }} {{ $fighter->attack_damages_1 }}DG</p>
+                                        <p class="att">{{ $fighter->attack_name_2 }} {{ $fighter->attack_damages_2 }}DG</p>
+                                        <p class="desc">{{ $fighter->description }}</p>
+                                    </div>
                                 </div>
                                 <div class="flip-card-back">
                                     <p class="title-2">{{ $fighter->attack_name_1 }}</p>

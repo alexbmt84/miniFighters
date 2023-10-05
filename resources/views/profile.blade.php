@@ -13,7 +13,7 @@
             <title>Profile</title>
         </head>
 
-        <body class="bg-dark">
+        <body style="height: 100vh">
 
             @include("partials.navbar")
 

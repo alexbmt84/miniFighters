@@ -1,8 +1,10 @@
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
     <div class="container-fluid">
 
-        <a class="navbar-brand" href="{{ route('home') }}">AVATARS</a>
+        <img src="/img/logo.png" width="300" class="logo">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -11,44 +13,49 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                @auth()
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}"><i class='bx bx-wallet'></i> {{ auth()->user()->wallet }}</a>
-                    </li>
-                @endauth
-
+                <i class='bx bx-home text-white'></i>
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ route('home') }}">Home</a>
                 </li>
 
-
+                <li class="nav-item">
+                    <a class="nav-link">|</a>
+                </li>
 
                 @auth()
 
+                    <i class='bx bx-book-content text-white'></i>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('avatars') }}">Cards</a>
                     </li>
 
+
+                    <li class="nav-item">
+                        <a class="nav-link">|</a>
+                    </li>
+
+                    <i class='bx bxs-user text-white'></i>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('create.fight') }}">Fight</a>
+                        <a class="nav-link">|</a>
                     </li>
 
+                    <i class='bx bxs-invader text-white'></i>
                     <li class="nav-item">
-                        <a class="nav-link" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        <a class="nav-link" href="{{ route('create.fight') }}">Fight</a>
                     </li>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
 
                 @else
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link">|</a>
                     </li>
 
                     <li class="nav-item">
@@ -63,12 +70,31 @@
 
             </ul>
 
-            <form class="d-flex" role="search">
+            @auth()
+                <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
+                </li>
 
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
+                    <li class="nav-item">
+                        <a class="nav-link">|</a>
+                    </li>
 
-            </form>
+                    <i class='bx bx-power-off text-white'></i>
+                    <li class="nav-item">
+                        <a class="nav-link" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                    </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </ul>
+            @endauth
+{{--            <form class="d-flex" role="search">--}}
+
+{{--                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">--}}
+{{--                <button class="btn btn-outline-light" type="submit">Search</button>--}}
+
+{{--            </form>--}}
 
         </div>
 

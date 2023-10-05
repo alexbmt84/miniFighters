@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class AvatarController extends Controller
@@ -149,6 +150,44 @@ class AvatarController extends Controller
         return null;
     }
 
+    public function generatePerc($prompt) {
+
+        $client = new Client();
+
+        $apiKey = "SG_92b91b7598ff95b1";  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
+        $url = "https://api.segmind.com/v1/kandinsky2.2-txt2img";
+
+        $data = [
+            "prompt" => $prompt,
+            "negative_prompt" => "lowres, text, error, cropped, ...",
+            "samples" => 1,
+            "num_inference_steps" => 25,
+            "img_width" => 512,
+            "img_height" => 768,
+            "prior_steps" => 25,
+            "seed" => 9863172,
+            "base64" => true
+        ];
+
+        try {
+            $response = $client->post($url, [
+                'json' => $data,
+                'headers' => [
+                    'x-api-key' => $apiKey,
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+
+            return $response->getBody()->getContents(); // retourne les données de l'image directement
+
+        } catch (\Exception $e) {
+            // Handle exceptions, perhaps log them and return a meaningful error to the user
+            return response($e->getMessage(), 500);
+        }
+    }
+
+
     public function store(Request $request) {
 
     $user = auth()->user();
@@ -166,13 +205,14 @@ class AvatarController extends Controller
 
     $name = $request->input('name');
 
-    $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+    // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+    $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, or any other formidable and striking figure. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
     $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
 
     $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
     $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
 
-    $avatarData = $this->generateFantasyAvatar($specialDescription);
+    $avatarData = $this->generatePerc($specialDescription);
 
     // Enregistrement temporaire des données de l'avatar
     $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
@@ -183,7 +223,7 @@ class AvatarController extends Controller
 
     // Stockage de l'avatar dans le disque public
     $dir = "fighters";
-    $filename = $uniqueName . '.png';
+    $filename = $uniqueName . '.jpg';
     $file->storeAs($dir, $filename, 'public');
 
     $filePath = $dir . '/' . $filename;
