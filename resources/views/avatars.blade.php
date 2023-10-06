@@ -19,7 +19,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
         @include('partials.navbar')
 
-        <h1 class="text-white text-center mt-5 mb-5">Avatars</h1>
+        <h1 class="text-white text-center mt-5 mb-5">Fighters</h1>
 
         <main>
 

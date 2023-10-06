@@ -17,7 +17,25 @@
 
             @include("partials.navbar")
 
-            <h1 class="text-center text-white my-5">Welcome {{ auth()->user()->name }}</h1>
+            <h1 class="text-center text-white mt-5">{{ auth()->user()->name }}</h1>
+            <h4 class="text-center text-white mt-3">Level {{ auth()->user()->level }}</h4>
+
+            <div class="profile-pic">
+
+                <label for="file" class="-label">
+                    <span class="glyphicon glyphicon-camera"></span>
+                    <span>Change Image</span>
+                </label>
+
+                <input id="file" type="file" name="avatar" onchange="loadFile(event);"/>
+
+                <img src="{{asset(auth()->user()->avatar)}}" alt="My Test Image" id="output" width="150px" />
+
+            </div>
+
+            <p class="text-center text-white mt-3"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} CR</p>
+
+            <script src="/js/photo.js" defer></script>
 
         </body>
 

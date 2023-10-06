@@ -159,7 +159,7 @@ class AvatarController extends Controller
 
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, error, cropped, ...",
+            "negative_prompt" => "lowres, text, error, cropped, white background",
             "samples" => 1,
             "num_inference_steps" => 25,
             "img_width" => 512,
@@ -207,6 +207,7 @@ class AvatarController extends Controller
 
     // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
     $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, or any other formidable and striking figure. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
+    //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
     $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
 
     $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
