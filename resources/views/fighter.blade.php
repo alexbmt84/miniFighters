@@ -22,7 +22,7 @@
 
 {{--                <h1 class="mt-5">{{ $name }}</h1>--}}
 
-                <div class="fighterContainer2 mt-5">
+                <div class="fighterContainer2 mt-5 mb-5">
 
                     <a class="fighter-link">
 
@@ -31,21 +31,39 @@
                                 <div class="flip-card-front">
                                     <div class="avatar-container">
                                         <img class="fighterAvatar2" src="{{ $avatar }}" alt="Generated Avatar">
+                                        <div class="stars2">
+                                            @if($fighter->hp <= 25)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp <= 40)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp <= 60)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp <= 80)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp > 80)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="text-container">
                                         <p class="title">{{$fighter->name}}</p>
                                         <p class="hp mt-3">{{ $fighter->hp }} PV</p>
-                                        <p class="att">{{ $fighter->attack_name_1 }} {{ $fighter->attack_damages_1 }}DG</p>
-                                        <p class="att">{{ $fighter->attack_name_2 }} {{ $fighter->attack_damages_2 }}DG</p>
-                                        <p class="desc">{{ $fighter->description }}</p>
+                                        <p class="desc">{{ $fighter->description }} <i class='bx bx-edit cursor-pointer'></i></p>
+                                        <div class="attacks-cont">
+                                            <p class="attack1">{{ $fighter->attack_name_1 }} - {{ $fighter->attack_damages_1 }} DG</p>
+                                            <p class="attack2">{{ $fighter->attack_name_2 }}  - {{ $fighter->attack_damages_2 }} DG</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flip-card-back">
-                                    <p class="title-2">{{ $fighter->attack_name_1 }}</p>
-                                    <p class="title-2">{{ $fighter->attack_damages_1 }} DG</p>
-
-                                    <p class="title-2">{{ $fighter->attack_name_2 }}</p>
-                                    <p class="title-2">{{ $fighter->attack_damages_2 }} DG</p>
                                 </div>
                             </div>
                         </div>
@@ -54,15 +72,41 @@
 
                 </div>
 
-                <form action="/delete/{{ $fighter->id }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded" type="submit">Delete</button>
-                </form>
+                @if($isMyFighter)
+                    <form action="/delete/{{ $fighter->id }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded" type="submit">Delete</button>
+                    </form>
+                @endif
 
             </main>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const descElement = document.querySelector('.desc');
+                    const editIcon = descElement.querySelector('.cursor-pointer');
 
+                    editIcon.addEventListener('click', function() {
+                        const currentDesc = descElement.textContent.trim();
+                        const inputElement = document.createElement('textarea');
+
+                        inputElement.type = 'text';
+                        inputElement.style.width = "800px";
+                        inputElement.style.height = "190px";
+                        inputElement.style.textAlign = "justify"
+                        inputElement.value = currentDesc;
+                        inputElement.addEventListener('blur', function() {
+                            descElement.innerHTML = `${inputElement.value} <i class='bx bx-edit cursor-pointer'></i>`;
+                        });
+
+                        descElement.innerHTML = '';
+                        descElement.appendChild(inputElement);
+                        inputElement.focus();
+                    });
+                });
+
+            </script>
         </body>
 
     </html>

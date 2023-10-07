@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fighter;
+use App\Models\User;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AvatarController extends Controller
@@ -23,7 +25,6 @@ class AvatarController extends Controller
 
     }
 
-
     public function home() {
 
         $fighters = Fighter::all();
@@ -34,13 +35,19 @@ class AvatarController extends Controller
 
     public function fighter($id) {
 
+        $userId = auth()->id();
+
         $fighter = Fighter::findOrFail($id);
+
+        $fighterId = $fighter->id;
 
         $name = $fighter->name;
 
         $avatar = '/storage/' . $fighter->avatar_path;
 
-        return view('fighter', compact('fighter', 'name', 'avatar'));
+        $isMyFighter = $this->isMyFighter($userId, $fighterId);
+
+        return view('fighter', compact('fighter', 'name', 'avatar', 'isMyFighter'));
 
     }
 
@@ -159,7 +166,7 @@ class AvatarController extends Controller
 
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, error, cropped, white background",
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background",
             "samples" => 1,
             "num_inference_steps" => 25,
             "img_width" => 512,
@@ -187,97 +194,149 @@ class AvatarController extends Controller
         }
     }
 
+    private function callAPI($prompt) {
+        $apiURL = 'https://api.openai.com/v1/chat/completions';
+
+        $headers = [
+            'Authorization' => 'Bearer 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', // replace with your actual key
+            'Content-Type' => 'application/json',
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ["role" => "user", "content" => $prompt]
+            ],
+            'temperature' => 0.7,
+            'n' => 1
+        ]);
+
+        $responseData = $response->json();
+
+        // Check if 'choices' key exists in the response
+        if (!isset($responseData['choices'][0]['message']['content'])) {
+            // Log the full response to debug
+            Log::error('Unexpected OpenAI API Response:', $responseData);
+            return 'Error generating content from OpenAI API.';
+        }
+
+        // Return the message content
+        return $responseData['choices'][0]['message']['content'];
+    }
 
     public function store(Request $request) {
 
-    $user = auth()->user();
-    $userId =$user->id;
+        $user = auth()->user();
+        $userId =$user->id;
 
-    if ($user->wallet < 200 ) {
-        return redirect()->back();
+        if ($user->wallet < 200 ) {
+            return redirect()->back();
+        }
+
+        $user->wallet -= 200;
+        $user->save();
+
+        // With unique string for MultiAvatars
+        $uniqueName = $this->generateUniqueString();
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+
+        // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+        $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name is : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+        //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
+        $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
+
+        $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
+        $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
+
+        $avatarData = $this->generatePerc($specialDescription);
+
+        // Enregistrement temporaire des données de l'avatar
+        $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
+        file_put_contents($tempPath, $avatarData);
+
+        // Convertir le fichier temporaire en instance UploadedFile
+        $file = new UploadedFile($tempPath, $uniqueName . '.png', null, null, true);
+
+        // Stockage de l'avatar dans le disque public
+        $dir = "fighters";
+        $filename = $uniqueName . '.jpg';
+        $file->storeAs($dir, $filename, 'public');
+
+        $filePath = $dir . '/' . $filename;
+
+        $hp = rand(20, 100);
+
+        $firstAttack = floor(rand(10, $hp) / 2);
+        $secondAttack = floor(($hp - $firstAttack) / 2);
+
+        $wordlists = include resource_path('wordlist.php');
+
+          /*      $attackNames = [];
+
+                for ($i = 0; $i < 2; $i++ ) {
+
+                    $randomNoun = $wordlists['nouns'][array_rand($wordlists['nouns'])];
+                    $randomAdjective = $wordlists['adjectives'][array_rand($wordlists['adjectives'])];
+                    $randomEnd = $wordlists['ending'][array_rand($wordlists['ending'])];
+
+                    $attackNames[] = $randomNoun . ' ' . $randomAdjective . ' ' . $randomEnd;
+
+                }
+
+                $attackName1 = $attackNames[0];
+                $attackName2 = $attackNames[1];*/
+
+        $attackName1 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
+        $attackName2 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");
+
+        // Stockez le chemin et le nom dans la base de données
+        $fighter = Fighter::create([
+            'name' => $name,
+            'avatar_path' => $filePath,
+            'hp' => $hp,
+            'attack_name_1' => $attackName1,
+            'attack_name_2' => $attackName2,
+            'attack_damages_1' => $firstAttack,
+            'attack_damages_2' => $secondAttack,
+            'user_id' => $userId,
+            'description' => $translateDescription
+        ]);
+
+        $isMyFighter = $this->isMyFighter($userId, $fighter->id);
+
+        return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter', 'isMyFighter'));
     }
 
-    $user->wallet -= 200;
-    $user->save();
+    public function isMyFighter($userId, $fighterId) {
 
-    // With unique string for MultiAvatars
-    $uniqueName = $this->generateUniqueString();
+        $query = Fighter::query()
+            ->where('user_id', $userId)
+            ->where('id', $fighterId)
+            ->first();
 
-    $name = $request->input('name');
 
-    // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
-    $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, or any other formidable and striking figure. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
-    //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
-    $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
-
-    $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
-    $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
-
-    $avatarData = $this->generatePerc($specialDescription);
-
-    // Enregistrement temporaire des données de l'avatar
-    $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
-    file_put_contents($tempPath, $avatarData);
-
-    // Convertir le fichier temporaire en instance UploadedFile
-    $file = new UploadedFile($tempPath, $uniqueName . '.png', null, null, true);
-
-    // Stockage de l'avatar dans le disque public
-    $dir = "fighters";
-    $filename = $uniqueName . '.jpg';
-    $file->storeAs($dir, $filename, 'public');
-
-    $filePath = $dir . '/' . $filename;
-
-    $hp = rand(20, 100);
-
-    $firstAttack = floor(rand(10, $hp) / 2);
-    $secondAttack = floor(($hp - $firstAttack) / 2);
-
-    $wordlists = include resource_path('wordlist.php');
-
-    $attackNames = [];
-
-    for ($i = 0; $i < 2; $i++ ) {
-
-        $randomNoun = $wordlists['nouns'][array_rand($wordlists['nouns'])];
-        $randomAdjective = $wordlists['adjectives'][array_rand($wordlists['adjectives'])];
-        $randomEnd = $wordlists['ending'][array_rand($wordlists['ending'])];
-
-        $attackNames[] = $randomNoun . ' ' . $randomAdjective . ' ' . $randomEnd;
+        if ($query) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
-    $attackName1 = $attackNames[0];
-    $attackName2 = $attackNames[1];
+    public function delete($fighterId) {
 
-    // Stockez le chemin et le nom dans la base de données
-    $fighter = Fighter::create([
-        'name' => $name,
-        'avatar_path' => $filePath,
-        'hp' => $hp,
-        'attack_name_1' => $attackName1,
-        'attack_name_2' => $attackName2,
-        'attack_damages_1' => $firstAttack,
-        'attack_damages_2' => $secondAttack,
-        'user_id' => $userId,
-        'description' => $translateDescription
-    ]);
+        $user = auth()->user();
 
-    return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter'));
-}
+        Fighter::query()->where('id', $fighterId)->delete();
 
-public function delete($fighterId) {
+        $user->wallet += 50;
+        $user->save();
 
-    $user = auth()->user();
+        return redirect('/avatars');
 
-    Fighter::query()->where('id', $fighterId)->delete();
-
-    $user->wallet += 50;
-    $user->save();
-
-    return redirect('/avatars');
-
-}
+    }
 
 }

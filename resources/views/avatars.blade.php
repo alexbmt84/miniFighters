@@ -19,7 +19,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
         @include('partials.navbar')
 
-        <h1 class="text-white text-center mt-5 mb-5">Fighters</h1>
+        <h1 class="text-white text-center mt-5 mb-3">FIGHTERS</h1>
 
         <main>
 
@@ -38,13 +38,49 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
                                     <img class="fighterAvatar" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
                                     <p class="hp">{{ $fighter->hp }} PV</p>
                                 </div>
-                                <div class="flip-card-back">
-                                    <p class="title-2">{{ $fighter->attack_name_1 }}</p>
-                                    <p class="title-2">{{ $fighter->attack_damages_1 }} DG</p>
 
-                                    <p class="title-2">{{ $fighter->attack_name_2 }}</p>
-                                    <p class="title-2">{{ $fighter->attack_damages_2 }} DG</p>
+                                <div class="flip-card-back">
+                                    <div class="atk-cont">
+
+                                        <div class="card-back-header">
+                                            <div class="avatar-circle">
+                                                <img class="fighterAvatar2" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
+                                            </div>
+
+                                            <div class="stars">
+                                                @if($fighter->hp <= 25)
+                                                    <i class='bx bxs-star' ></i>
+                                                @elseif($fighter->hp <= 40)
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                @elseif($fighter->hp <= 60)
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                @elseif($fighter->hp <= 80)
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                @elseif($fighter->hp > 80)
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                    <i class='bx bxs-star' ></i>
+                                                @endif
+                                            </div>
+                                            <p class="title-back">{{$fighter->name}} <span class="title-back">- {{ $fighter->hp }} PV</span></p>
+                                        </div>
+
+                                        <p class="title-2">{{ $fighter->attack_name_1 }}</p>
+                                        <p class="atk-dg">| {{ $fighter->attack_damages_1 }} DG |</p>
+
+                                        <p class="title-2">{{ $fighter->attack_name_2 }}</p>
+                                        <p class="atk-dg">| {{ $fighter->attack_damages_2 }} DG |</p>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
 

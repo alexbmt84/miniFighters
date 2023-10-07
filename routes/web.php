@@ -47,6 +47,8 @@ Route::post('/arena/join', [GameController::class, 'joinWithCode'])->name('game.
 
 Route::get('/fight', [GameController::class, 'index'])->name('create.fight');
 
+Route::get('/profile/{name}', [ProfileController::class, 'findUserProfile'])->name('find.profile');
+
 Route::post('/game/leave/{code}', [GameController::class, 'leave'])->name('game.leave');
 
 

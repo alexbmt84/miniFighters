@@ -1,4 +1,7 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
@@ -15,7 +18,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <i class='bx bx-home text-white'></i>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{{ route('home') }}">Home</a>
+                    <a class="nav-link text-white" aria-current="page" href="{{ route('home') }}">Home</a>
                 </li>
 
                 <li class="nav-item">
@@ -26,7 +29,7 @@
 
                     <i class='bx bx-book-content text-white'></i>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('avatars') }}">Cards</a>
+                        <a class="nav-link text-white" href="{{ route('avatars') }}">Cards</a>
                     </li>
 
 
@@ -36,7 +39,7 @@
 
                     <i class='bx bxs-user text-white'></i>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile') }}">Profile</a>
+                        <a class="nav-link text-white" href="{{ route('profile') }}">Profile</a>
                     </li>
 
                     <li class="nav-item">
@@ -45,13 +48,13 @@
 
                     <i class='bx bxs-invader text-white'></i>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('create.fight') }}">Fight</a>
+                        <a class="nav-link text-white" href="{{ route('create.fight') }}">Fight</a>
                     </li>
 
                 @else
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
                     </li>
 
                     <li class="nav-item">
@@ -59,7 +62,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
                     </li>
 
                 @endauth
@@ -73,7 +76,7 @@
             @auth()
                 <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('register') }}"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
+                    <a class="nav-link text-white" href="{{ route('register') }}"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
                 </li>
 
                     <li class="nav-item">
@@ -82,7 +85,7 @@
 
                     <i class='bx bx-power-off text-white'></i>
                     <li class="nav-item">
-                        <a class="nav-link" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        <a class="nav-link text-white" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     </li>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
