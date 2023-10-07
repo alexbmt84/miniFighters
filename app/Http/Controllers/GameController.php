@@ -19,7 +19,6 @@ class GameController extends Controller
         $game = new Game;
         $game->code = Str::random(6);
         $game->save();
-
         // Attache l'utilisateur actuellement connecté au jeu
         $game->users()->attach(auth()->id());
 

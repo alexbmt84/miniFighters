@@ -73,11 +73,32 @@
                 </div>
 
                 @if($isMyFighter)
+
+                    @if($isInMarketPlace)
+                        <form action="/remove/{{ $fighter->id }}" method="POST" class="mt-5">
+                            @csrf
+                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Remove of Marketplace</button>
+                        </form>
+                    @else
+                        <form action="/sell/{{ $fighter->id }}" method="POST" class="mt-5">
+                            @csrf
+                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Sell on Marketplace</button>
+                        </form>
+                    @endif
+
                     <form action="/delete/{{ $fighter->id }}" method="POST">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded" type="submit">Delete</button>
+                        <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Delete</button>
                     </form>
+
+                @else
+                    @if($isInMarketPlace)
+                        <form action="/buy/{{ $fighter->id }}" method="POST" class="mt-5">
+                            @csrf
+                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Buy</button>
+                        </form>
+                    @endif
                 @endif
 
             </main>

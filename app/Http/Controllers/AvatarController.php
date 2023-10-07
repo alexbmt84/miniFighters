@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fighter;
+use App\Models\Marketplace;
 use App\Models\User;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -19,7 +20,7 @@ class AvatarController extends Controller
 
         $userId = auth()->id();
 
-        $fighters = Fighter::query()->where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+        $fighters = Fighter::query()->where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
 
         return view('avatars', compact('fighters'));
 
@@ -47,7 +48,9 @@ class AvatarController extends Controller
 
         $isMyFighter = $this->isMyFighter($userId, $fighterId);
 
-        return view('fighter', compact('fighter', 'name', 'avatar', 'isMyFighter'));
+        $isInMarketPlace = Marketplace::isInMarketPlace($fighterId);
+
+        return view('fighter', compact('fighter', 'name', 'avatar', 'isMyFighter', 'isInMarketPlace'));
 
     }
 
@@ -334,6 +337,49 @@ class AvatarController extends Controller
 
         $user->wallet += 50;
         $user->save();
+
+        return redirect('/avatars');
+
+    }
+
+    public function sell($fighterId) {
+
+        Fighter::listForSale($fighterId);
+
+        return redirect('/marketplace');
+
+    }
+
+    public function buy($fighterId) {
+
+        $user = auth()->user();
+        $newUserId = auth()->id();
+
+        $fighter = Fighter::find($fighterId);
+
+        if ($user->wallet >= 400) {
+
+            $ownerId = $fighter->user_id;
+            $owner = User::find($ownerId);
+            $owner->wallet +=400;
+            $owner->save();
+
+            $fighter->user_id = $newUserId;
+            $fighter->updated_at = now();
+
+            $fighter->save();
+
+            $user->wallet -=400;
+            $user->save();
+
+            Marketplace::where('fighter_id', $fighterId)->delete();
+
+        } else {
+
+            return redirect('/marketplace');
+
+        }
+
 
         return redirect('/avatars');
 

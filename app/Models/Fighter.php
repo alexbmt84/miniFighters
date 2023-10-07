@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Fighter extends Model
 {
@@ -13,6 +14,28 @@ class Fighter extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function marketplace(): BelongsTo {
+        return $this->belongsTo(Marketplace::class);
+    }
+
+    public static function listForSale($fighterId) {
+
+        $fighter = Fighter::query()->where('id', $fighterId)->first();
+
+        if ($fighter->user_id == auth()->id()) {
+
+            $listing = new Marketplace;
+            $listing->fighter_id = $fighterId;
+            $listing->user_id = auth()->id();
+            $listing->price = 400;
+
+
+            $listing->save();
+
+        }
+
     }
 
 }

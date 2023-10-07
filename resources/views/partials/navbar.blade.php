@@ -51,6 +51,15 @@
                         <a class="nav-link text-white" href="{{ route('create.fight') }}">Fight</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link">|</a>
+                    </li>
+
+                    <i class='bx bxs-store text-white'></i>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('marketplace') }}">Marketplace</a>
+                    </li>
+
                 @else
 
                     <li class="nav-item">

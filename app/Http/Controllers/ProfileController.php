@@ -17,7 +17,7 @@ class ProfileController extends Controller
         $user = User::query()->where('name', $name)->first();
         $userId = $user->id;
 
-        $fighters = Fighter::query()->where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+        $fighters = Fighter::query()->where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
 
         return view('usersAvatars', compact('fighters', 'user'));
 
