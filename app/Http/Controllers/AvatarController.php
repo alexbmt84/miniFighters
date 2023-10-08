@@ -197,6 +197,46 @@ class AvatarController extends Controller
         }
     }
 
+    public function generateRPG($prompt) {
+
+        $client = new Client([
+            'verify' => false  // Désactiver la vérification SSL si nécessaire
+        ]);
+
+        $apiKey = "SG_92b91b7598ff95b1";  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
+        $url = "https://api.segmind.com/v1/sdxl1.0-txt2img";
+
+        $data = [
+            "prompt" => $prompt,
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, multiple characters, anime, cartoon, realist, photography, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, blurry, bad anatomy, blurred, watermark, grainy, signature, cut off, draft",
+            "samples" => 1,
+            "scheduler" => "ddim",
+            "num_inference_steps" => 25,
+            "guidance_scale" => 9,
+            "seed" => 9863172,
+            "img_width" => 512,
+            "img_height" => 768,
+            "base64" => false
+        ];
+
+        try {
+            $response = $client->post($url, [
+                'json' => $data,
+                'headers' => [
+                    'x-api-key' => $apiKey,
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+
+            return $response->getBody()->getContents(); // retourne les données de l'image directement
+
+        } catch (\Exception $e) {
+            // Handle exceptions, perhaps log them and return a meaningful error to the user
+            return response($e->getMessage(), 500);
+        }
+    }
+
     private function callAPI($prompt) {
         $apiURL = 'https://api.openai.com/v1/chat/completions';
 
@@ -245,8 +285,19 @@ class AvatarController extends Controller
         $name = $request->input('name');
         $description = $request->input('description');
 
-        // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
-        $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name is : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+        if($description && strlen($description) > 3) {
+
+            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+            $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name has some characteristics already : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+        } else {
+
+            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+           // HERO $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+           // Civilian
+            $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. This civilian will have some abilities and is in a cards game that will contain some super-heroes, mystic characters, gangsters and . $name . will be a civilian in this game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+        }
 
         //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
         $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
@@ -254,7 +305,7 @@ class AvatarController extends Controller
         $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
         $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
 
-        $avatarData = $this->generatePerc($specialDescription);
+        $avatarData = $this->generatePerc($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
 
         // Enregistrement temporaire des données de l'avatar
         $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
@@ -309,8 +360,9 @@ class AvatarController extends Controller
         ]);
 
         $isMyFighter = $this->isMyFighter($userId, $fighter->id);
+        $isInMarketPlace = Marketplace::isInMarketPlace($fighter->id);
 
-        return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter', 'isMyFighter'));
+        return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter', 'isMyFighter', 'isInMarketPlace'));
     }
 
     public function isMyFighter($userId, $fighterId) {
