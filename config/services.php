@@ -30,4 +30,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'open_ai' => [
+        'api_key' => env('OPENAI_API_KEY')
+    ],
+
+    'segmind' => [
+        'api_key' => env('SEGMIND_API_KEY')
+    ],
+
+    'deep_ai' => [
+        'api_key' => env('DEEP_AI_API_KEY')
+    ]
+
 ];

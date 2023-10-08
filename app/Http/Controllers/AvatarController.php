@@ -58,31 +58,6 @@ class AvatarController extends Controller
 
     }
 
-    private function getOpenAIResponse($prompt)
-    {
-        $client = new Client();
-
-        $response = $client->post('https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Authorization' => 'Bearer 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',
-                'Content-Type' => 'application/json'
-            ],
-            'json' => [
-                'model' => 'gpt-3.5-turbo',
-                'messages' => [['role' => 'user', 'content' => $prompt]],
-                'temperature' => 0.7
-            ]
-        ]);
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        if (isset($data['choices'][0]['message']['content'])) {
-            return $data['choices'][0]['message']['content'];
-        }
-
-        return null;
-    }
-
     public function generateAvatarDescription($text) {
 
         $client = new Client([
@@ -91,7 +66,7 @@ class AvatarController extends Controller
 
         $response = $client->post('https://api.deepai.org/api/text-generator', [
             'headers' => [
-                'api-key' => 'd3cbe5fd-4117-4e37-ae34-b6373fe6f93e'
+                'api-key' => config('services.deep_ai.api_key')
             ],
             'multipart' => [
                 [
@@ -132,43 +107,11 @@ class AvatarController extends Controller
 
     }
 
-    public function generateFantasyAvatar($text) {
-
-        $type = "superhero";
-
-        $client = new Client([
-            'verify' => false  // Désactiver la vérification SSL si nécessaire
-        ]);
-
-        $response = $client->post('https://api.deepai.org/api/cyber-beast-generator', [
-            'headers' => [
-                'api-key' => 'd3cbe5fd-4117-4e37-ae34-b6373fe6f93e'
-            ],
-            'multipart' => [
-                [
-                    'name'     => 'text',
-                    'contents' => $text
-                ],
-                [
-                    'name'     => 'grid_size',
-                    'contents' => '1'
-                ]
-            ]
-        ]);
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        if (isset($data['output_url'])) {
-            return file_get_contents($data['output_url']);
-        }
-        return null;
-    }
-
     public function generatePerc($prompt) {
 
         $client = new Client();
 
-        $apiKey = "SG_92b91b7598ff95b1";  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
+        $apiKey = config('services.segmind.api_key');  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
         $url = "https://api.segmind.com/v1/kandinsky2.2-txt2img";
 
         $data = [
@@ -207,7 +150,7 @@ class AvatarController extends Controller
             'verify' => false  // Désactiver la vérification SSL si nécessaire
         ]);
 
-        $apiKey = "SG_92b91b7598ff95b1";  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
+        $apiKey = config('services.segmind.api_key');  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
         $url = "https://api.segmind.com/v1/sdxl1.0-txt2img";
 
         $data = [
@@ -245,11 +188,11 @@ class AvatarController extends Controller
         $apiURL = 'https://api.openai.com/v1/chat/completions';
 
         $headers = [
-            'Authorization' => 'Bearer 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', // replace with your actual key
+            'Authorization' => 'Bearer ' . config('services.open_ai.api_key'),
             'Content-Type' => 'application/json',
         ];
 
-        $response = Http::withHeaders($headers)->post($apiURL, [
+        $response = Http::withHeaders($headers)->withoutVerifying()->post($apiURL, [
             'model' => 'gpt-3.5-turbo',
             'messages' => [
                 ["role" => "user", "content" => $prompt]
