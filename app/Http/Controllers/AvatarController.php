@@ -259,11 +259,11 @@ class AvatarController extends Controller
 
                 if($description && strlen($description) > 3) {
 
-                    $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. $name has some characteristics already : $description. This civilian will have some abilities and is part of a world that will contain some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                    $specialMovePrompt = "Envision an human civilian based on the name '" . $name . "'. $name has some characteristics already : $description. This civilian will have some abilities and is part of a world that will contain some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
 
                 } else {
 
-                    $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. This civilian will have some abilities and is part of world that contains some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                    $specialMovePrompt = "Envision an human civilian based on the name '" . $name . "'. This civilian will have some abilities and is part of world that contains some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
                 }
 
                 break;
@@ -277,7 +277,8 @@ class AvatarController extends Controller
         }
 
         //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
-        $specialDescription = $this->generateAvatarDescription($specialMovePrompt);
+        // LAST change, trying to use ChatGPT rather than DeepAI for text description generation. Adding a conc.
+        $specialDescription = $this->callAPI($specialMovePrompt . " Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs");
 
         $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
         $translateDescription = $this->generateAvatarDescription($translateMovePrompt);

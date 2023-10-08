@@ -21,7 +21,7 @@ class MarketplaceController extends Controller
 
         if (!$fightersId->isEmpty()) {
 
-            $fighters = Fighter::query()->whereIn('id', $fightersId)->get();
+            $fighters = Fighter::query()->whereIn('id', $fightersId)->orderBy('updated_at', 'desc')->get();
             $userId = Marketplace::query()->where('fighter_id', $fightersId->first())->value('user_id');
 
             if ($userId) {

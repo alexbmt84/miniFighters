@@ -15,11 +15,11 @@
                 .spinner {
                     display: none;
                     position: absolute;
-                    top: 115px;
+                    top: 180px;
                     left: 195px;
                     background-image: linear-gradient(rgb(186, 66, 255) 35%,rgb(0, 225, 255));
-                    width: 40px;
-                    height: 40px;
+                    width: 35px;
+                    height: 35px;
                     animation: spinning82341 1.7s linear infinite;
                     text-align: center;
                     border-radius: 50px;
@@ -42,8 +42,8 @@
                     font-size: 20px;
                     font-style: normal;
                     z-index: 1;
-                    top: -40px;
-                    left: 65px;
+                    top: 325px;
+                    left: 70px;
                     font-family: 'Staatliches', cursive;
                     transition: 0.5s;
                 }
@@ -76,7 +76,7 @@
                     @csrf
 
                     <div class="input-container">
-                        <p class="wait" id="wait">Please wait... Estimated wait time : 30 sec...</p>
+                        <p class="wait" id="wait">Please wait... Estimated time : 30 seconds.</p>
 
                         <div class="input-content">
                             <div class="input-dist">
@@ -94,17 +94,17 @@
 
                     <label>
                         <select name="type" style="z-index: 99;
-    position: relative;
-    width: 374px;
-    height: 60px;
-    border-radius: 5px;
-    background-color: #202020;
-    color: white;
-    font-size: 22px;
-    text-align: center;
-    border: solid rgba(69,118,134,0.81);
-    top: -63px;
-    left: -5px;">
+                                                position: relative;
+                                                width: 374px;
+                                                height: 60px;
+                                                border-radius: 5px;
+                                                background-color: #202020;
+                                                color: white;
+                                                font-size: 22px;
+                                                text-align: center;
+                                                border: solid rgba(69,118,134,0.81);
+                                                top: -63px;
+                                                left: -5px;">
                             <option value="Fighter">Fighter</option>
                             <option value="Civilian">Civilian</option>
                         </select>
