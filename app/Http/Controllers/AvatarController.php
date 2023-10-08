@@ -18,6 +18,10 @@ class AvatarController extends Controller
 
     public function index() {
 
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         $userId = auth()->id();
 
         $fighters = Fighter::query()->where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
@@ -269,6 +273,10 @@ class AvatarController extends Controller
 
     public function store(Request $request) {
 
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         $user = auth()->user();
         $userId =$user->id;
 
@@ -282,21 +290,47 @@ class AvatarController extends Controller
         // With unique string for MultiAvatars
         $uniqueName = $this->generateUniqueString();
 
+        $type = $request->input('type');
+
         $name = $request->input('name');
         $description = $request->input('description');
 
-        if($description && strlen($description) > 3) {
+        switch ($type) {
 
-            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
-            $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name has some characteristics already : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+            case 'Fighter':
 
-        } else {
+                if($description && strlen($description) > 3) {
 
-            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
-           // HERO $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
-            // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
-           // Civilian
-            $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. This civilian will have some abilities and is in a cards game that will contain some super-heroes, mystic characters, gangsters and . $name . will be a civilian in this game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                    // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
+                    $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name has some characteristics already : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+                } else {
+
+                   $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+                }
+
+                break;
+
+            case 'Civilian':
+
+                if($description && strlen($description) > 3) {
+
+                    $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. $name has some characteristics already : $description. This civilian will have some abilities and is part of a world that will contain some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+
+                } else {
+
+                    $specialMovePrompt = "Envision a civilian based on the name '" . $name . "'. This civilian will have some abilities and is part of world that contains some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                }
+
+                break;
+
+            default:
+
+                $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+            break;
+
         }
 
         //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
@@ -383,6 +417,10 @@ class AvatarController extends Controller
 
     public function delete($fighterId) {
 
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         $user = auth()->user();
 
         Fighter::query()->where('id', $fighterId)->delete();
@@ -396,6 +434,10 @@ class AvatarController extends Controller
 
     public function sell($fighterId) {
 
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         Fighter::listForSale($fighterId);
 
         return redirect('/marketplace');
@@ -403,6 +445,10 @@ class AvatarController extends Controller
     }
 
     public function buy($fighterId) {
+
+        if (!auth()->user()) {
+            abort(404);
+        }
 
         $user = auth()->user();
         $newUserId = auth()->id();

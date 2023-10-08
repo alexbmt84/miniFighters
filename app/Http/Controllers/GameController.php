@@ -11,11 +11,21 @@ class GameController extends Controller
 {
 
     public function index() {
+
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         return view('create_fight');
+
     }
 
     public function join()
     {
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         $game = new Game;
         $game->code = Str::random(6);
         $game->save();
@@ -28,6 +38,11 @@ class GameController extends Controller
 
     public function joinWithCode(Request $request)
     {
+
+        if (!auth()->user()) {
+            abort(404);
+        }
+
         $code = $request->input('code');
         $game = Game::where('code', $code)->first();
 

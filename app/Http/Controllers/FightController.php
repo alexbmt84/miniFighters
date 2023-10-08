@@ -6,6 +6,8 @@ class FightController extends Controller
 {
     public function index()
     {
+
         return view('fight');
+
     }
 }

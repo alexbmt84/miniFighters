@@ -54,14 +54,72 @@
                                                 <i class='bx bxs-star star-big-card' ></i>
                                             @endif
                                         </div>
+                                        @if($isMyFighter)
+
+                                            @if($isInMarketPlace)
+                                                <form action="/remove/{{ $fighter->id }}" method="POST" class="mt-5 form-manage-fighters">
+                                                    @csrf
+                                                    <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit"><i class='bx bx-arrow-from-top' ></i>Remove of Marketplace</button>
+                                                </form>
+                                            @else
+                                                <form action="/sell/{{ $fighter->id }}" method="POST" class="mt-5 form-manage-fighters">
+                                                    @csrf
+                                                    <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit"><i class='bx bx-money-withdraw'></i>Sell on Marketplace</button>
+                                                </form>
+                                            @endif
+
+                                            <form action="/delete/{{ $fighter->id }}" method="POST" class="form-manage-fighters">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit"><i class='bx bxs-trash' ></i>Delete</button>
+                                            </form>
+
+                                        @else
+                                            @if($isInMarketPlace)
+                                                <form action="/buy/{{ $fighter->id }}" method="POST" class="mt-5 form-manage-fighters">
+                                                    @csrf
+                                                    <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit"><i class='bx bx-cart-add'></i>Buy</button>
+                                                </form>
+                                            @endif
+                                        @endif
                                     </div>
                                     <div class="text-container">
                                         <p class="title">{{$fighter->name}}</p>
                                         <p class="hp mt-3">{{ $fighter->hp }} PV</p>
                                         <p class="desc">{{ $fighter->description }} <i class='bx bx-edit cursor-pointer'></i></p>
-                                        <div class="attacks-cont">
+                                        <div class="attacks-cont mb-5">
                                             <p class="attack1">{{ $fighter->attack_name_1 }} - {{ $fighter->attack_damages_1 }} DG</p>
-                                            <p class="attack2">{{ $fighter->attack_name_2 }}  - {{ $fighter->attack_damages_2 }} DG</p>
+                                            <p class="attack2 mb-5">{{ $fighter->attack_name_2 }}  - {{ $fighter->attack_damages_2 }} DG</p>
+                                        </div>
+                                        <div class="attacks-cont">
+                                            <h3>FORCE</h3>
+                                            <div class="container bar">
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar" style="width: 60%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3>INTELLIGENCE</h3>
+                                            <div class="container bar">
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar"  style="width: 80%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3>AGILITE</h3>
+                                            <div class="container bar">
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar"  style="width: 40%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3>ENDURANCE</h3>
+                                            <div class="container bar">
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar"  style="width: 30%">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,34 +130,7 @@
 
                 </div>
 
-                @if($isMyFighter)
 
-                    @if($isInMarketPlace)
-                        <form action="/remove/{{ $fighter->id }}" method="POST" class="mt-5">
-                            @csrf
-                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Remove of Marketplace</button>
-                        </form>
-                    @else
-                        <form action="/sell/{{ $fighter->id }}" method="POST" class="mt-5">
-                            @csrf
-                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Sell on Marketplace</button>
-                        </form>
-                    @endif
-
-                    <form action="/delete/{{ $fighter->id }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Delete</button>
-                    </form>
-
-                @else
-                    @if($isInMarketPlace)
-                        <form action="/buy/{{ $fighter->id }}" method="POST" class="mt-5">
-                            @csrf
-                            <button class="uppercase mt-5 bg-black text-white font-bold py-2 px-4 rounded btn btn-generate sell" type="submit">Buy</button>
-                        </form>
-                    @endif
-                @endif
 
             </main>
 

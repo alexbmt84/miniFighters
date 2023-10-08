@@ -5,7 +5,6 @@
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot>
-
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -46,6 +45,10 @@
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
+
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900 ml-3" href="{{ route('register') }}">
+                        {{ __('Sign up') }}
+                    </a>
 
                 <x-button class="ml-3">
                     {{ __('Log in') }}

@@ -12,20 +12,44 @@ class MarketplaceController extends Controller
 
     public function index() {
 
-        $user = auth()->user();
+        if (!auth()->user()) {
+            abort(404);
+        }
 
-        $fightersId = Marketplace::pluck('fighter_id');  // Pas besoin de 'all()' ici
-        $userId = Marketplace::pluck('user_id');
+        $authenticatedUser = auth()->user();
+        $fightersId = Marketplace::query()->pluck('fighter_id');
 
-        $user = User::query()->where('id', $userId)->first();
+        if (!$fightersId->isEmpty()) {
 
-        $fighters = Fighter::whereIn('id', $fightersId)->get();
+            $fighters = Fighter::query()->whereIn('id', $fightersId)->get();
+            $userId = Marketplace::query()->where('fighter_id', $fightersId->first())->value('user_id');
 
-        return view('marketplace', compact('fighters', 'user'));
+            if ($userId) {
+
+                $user = User::query()->find($userId);
+
+            } else {
+
+                $user = null;
+
+            }
+
+        } else {
+
+            $fighters = collect();  // Une collection vide
+            $user = null;
+
+        }
+
+        return view('marketplace', compact('fighters', 'authenticatedUser', 'user'));
 
     }
 
     public function delete($fighterId) {
+
+        if (!auth()->user()) {
+            abort(404);
+        }
 
         $user = auth()->user();
 

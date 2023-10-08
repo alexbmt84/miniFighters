@@ -27,34 +27,31 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-Route::get('/avatars', [AvatarController::class, 'index'])->name('avatars');
-Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
-Route::post('/generate', [AvatarController::class, 'store'])->name('generate');
+Route::get('/avatars', [AvatarController::class, 'index'])->name('avatars')->middleware(['auth']);
+Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace')->middleware(['auth']);
+Route::post('/generate', [AvatarController::class, 'store'])->name('generate')->middleware(['auth']);
 Route::get('/fighter/{id}', [AvatarController::class, 'fighter'])->name('fighter');
-Route::get('/fight', [FightController::class, 'index'])->name('fight');
+Route::get('/fight', [FightController::class, 'index'])->name('fight')->middleware(['auth']);
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
 
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-
-Route::post('/sell/{fighterId}', [AvatarController::class, 'sell']);
-Route::post('/buy/{fighterId}', [AvatarController::class, 'buy']);
-Route::post('/remove/{fighterId}', [MarketplaceController::class, 'delete']);
-Route::delete('/delete/{fighterId}', [AvatarController::class, 'delete']);
+Route::post('/sell/{fighterId}', [AvatarController::class, 'sell'])->middleware(['auth']);
+Route::post('/buy/{fighterId}', [AvatarController::class, 'buy'])->middleware(['auth']);
+Route::post('/remove/{fighterId}', [MarketplaceController::class, 'delete'])->middleware(['auth']);
+Route::delete('/delete/{fighterId}', [AvatarController::class, 'delete'])->middleware(['auth']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard')->middleware(['auth']);
 
-Route::get('/arena', [GameController::class, 'join'])->name('fight');
+Route::get('/arena', [GameController::class, 'join'])->name('fight')->middleware(['auth']);
+Route::get('/arena/{code}', [GameController::class, 'show'])->name('game.show')->middleware(['auth']);
+Route::post('/arena/join', [GameController::class, 'joinWithCode'])->name('game.joinWithCode')->middleware(['auth']);
 
-Route::get('/arena/{code}', [GameController::class, 'show'])->name('game.show');
-
-Route::post('/arena/join', [GameController::class, 'joinWithCode'])->name('game.joinWithCode');
-
-Route::get('/fight', [GameController::class, 'index'])->name('create.fight');
+Route::get('/fight', [GameController::class, 'index'])->name('create.fight')->middleware(['auth']);
 
 Route::get('/profile/{name}', [ProfileController::class, 'findUserProfile'])->name('find.profile');
 
-Route::post('/game/leave/{code}', [GameController::class, 'leave'])->name('game.leave');
+Route::post('/game/leave/{code}', [GameController::class, 'leave'])->name('game.leave')->middleware(['auth']);
 
 
 Route::middleware(['web'])->group(function () {

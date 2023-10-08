@@ -24,21 +24,22 @@
 
 <h1 class="text-center mt-5 mb-5">Fight</h1>
 
-<main class="container text-center">
+<main class="container text-center mx-auto my-0 fight-cont">
+
+    <h2 style="font-style: normal">Créer une arène</h2>
 
     <form action="{{ route('fight') }}" method="get">
 
-        <button type="submit" class="btn btn-dark mt-5 mb-5">Créer un salon</button>
+        <button type="submit" class="btn btn-dark mb-5 btn-create-room"><i class='bx bx-dice-6' ></i>Créer</button>
 
     </form>
-
-    <form action="{{ route('game.joinWithCode') }}" method="post">
+    <h2 style="font-style: normal">Rejoindre une arène</h2>
+    <form action="{{ route('game.joinWithCode') }}" method="post" class="join-with-code">
         @csrf
         <label>
-            Room code:
-            <input type="text" name="code" />
+            <input placeholder="Room code" name="code" type="text" class="input-is" required>
         </label>
-        <button type="submit">Rejoindre un salon</button>
+        <button type="submit" class="btn btn-dark mt-3 mb-5 btn-create-room"><i class='bx bx-search-alt' ></i>Rejoindre un salon</button>
     </form>
 
     @if (session('error'))

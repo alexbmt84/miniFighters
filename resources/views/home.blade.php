@@ -62,8 +62,12 @@
 
             <div class="d-flex flex-column align-items-center mt-5 vh-100">
 
-                <h1 class="text-center text-white mb-5">Welcome</h1>
-                <h2 class="text-center text-white" id="subtitle"> Let's create a new card and start a new collection or complete yours now !</h2>
+                @auth()
+                    <h1 class="text-center text-white mb-5">Welcome {{ auth()->user()->name }}</h1>
+                  @else
+                    <h1 class="text-center text-white mb-5">Welcome</h1>
+                    <h2 class="text-center text-white" id="subtitle">Login or create an account and generate your unique cards !</h2>
+                @endauth
 
 {{--                <img src="/storage/fighters/Dimitri.png" alt="" srcset="" width="400px">--}}
 
@@ -73,6 +77,7 @@
 
                     <div class="input-container">
                         <p class="wait" id="wait">Please wait... Estimated wait time : 30 sec...</p>
+
                         <div class="input-content">
                             <div class="input-dist">
                                 <div class="input-type">
@@ -86,6 +91,24 @@
                         </div>
                         <button class="btn btn-dark btn-generate col-12" type="submit">Generate a card !</button>
                     </div>
+
+                    <label>
+                        <select name="type" style="z-index: 99;
+    position: relative;
+    width: 374px;
+    height: 60px;
+    border-radius: 5px;
+    background-color: #202020;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    border: solid rgba(69,118,134,0.81);
+    top: -63px;
+    left: -5px;">
+                            <option value="Fighter">Fighter</option>
+                            <option value="Civilian">Civilian</option>
+                        </select>
+                    </label>
 
                 </form>
 

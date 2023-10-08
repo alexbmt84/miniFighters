@@ -1,7 +1,7 @@
 .flip-card {
     background-color: transparent;
     width: 100%;
-    height: 925px;
+    height: 100%;
     perspective: 1000px;
     font-family: sans-serif;
 }
@@ -11,10 +11,21 @@ main {
     padding: 10px 50px;
 }
 
+h3 {
+    font-family: 'Staatliches', cursive;
+    font-size: 50px;
+    margin-top: 20px;
+}
+
+.form-manage-fighters {
+    width: 463px;
+}
+
 .fighterContainer2 {
     margin-top: 60px;
     margin-bottom: 10px;
     width: 100%;
+    height: 100%;
     align-items: center;
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -122,12 +133,12 @@ main {
     flex-direction: row;
     justify-content: start;
     width: 100%;
-    height: 1000px;
+    height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border: 1px solid #9e30a9;
     border-radius: 1rem;
-    padding: 0 100px;
+    padding: 0 100px 100px 100px;
 }
 
 .flip-card-front {
@@ -139,4 +150,42 @@ main {
     background: linear-gradient( 120deg, #141414 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
     color: white;
     transform: rotateY(180deg);
+}
+
+
+.container {
+    margin: 30px auto;
+    width: 500px;
+    text-align: center;
+}
+
+.bar {
+    height: 35px;
+}
+
+.progress {
+    padding: 6px;
+    width: 100%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar {
+    height: 18px;
+    background-color: #ee303c;
+    border-radius: 4px;
+    transition: 0.4s linear;
+    transition-property: width, background-color;
+}
+
+.progress-striped .progress-bar {
+    background-color: #ffffffed;
+    width: 60%;
+    background-image: linear-gradient(
+        45deg, rgba(7, 6, 7, 0.71) 25%,
+        transparent 25%, transparent 50%,
+        rgba(7, 6, 7, 0.71) 50%, rgba(7, 6, 7, 0.71) 75%,
+        transparent 75%, transparent);
 }

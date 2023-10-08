@@ -21,7 +21,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
 <h1 class="text-white text-center mt-5 mb-3">MARKETPLACE</h1>
 
-<main>
+<main style="height: 100vh">
 
     @foreach ($fighters as $fighter)
 

@@ -67,15 +67,15 @@
 
             @include('partials.navbar')
 
-            <main>
+            <main style="height: 100vh">
 
-                <div>
+                <div style="width: 100%">
 
                     <h1 class="text-center mt-5 mb-5">Arena</h1>
 
-                    <h2 class="text-center">Room code : {{ $game->code }}</h2>
+                    <h2 class="text-center mx-auto my-auto">Room code : {{ $game->code }}</h2>
 
-                    <ul id="playerList" class="text-center mt-3" style="list-style-type: none; font-size: 28px; font-weight: bold">
+                    <ul id="playerList" class="text-center mt-3" style="list-style-type: none; font-size: 28px; font-weight: bold; padding: 0">
                         @foreach($game->users as $user)
                             <li class="text-center">{{ $user->name }}</li>
                             <li class="text-center">Level {{ $user->level }}</li>

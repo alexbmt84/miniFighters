@@ -32,13 +32,21 @@ h2 {
     line-height: 60px;
     text-align: justify;
     border-radius: 20px;
-    border: 1px solid #363636;
-    background: repeating-linear-gradient(to bottom, transparent 0%, rgba(64, 144, 181, 0.6) 1px, rgb(0, 0, 0) 3px, hsl(295, 60%, 12%) 5px, #153544 4px, transparent 0.5%), repeating-linear-gradient(to left, hsl(295, 60%, 12%) 100%, hsla(295, 60%, 12%, 0.99) 100%);
-}
+   }
 
 h3 {
     font-family: 'Staatliches', cursive;
     font-size: 70px;
+}
+
+select {
+    font-family: 'Staatliches', cursive;
+    font-size: 35px !important;
+}
+
+option {
+    font-family: 'Staatliches', cursive;
+    font-size: 25px;
 }
 
 .profile-pic-user {
@@ -87,6 +95,11 @@ h3 {
 .bx-home, .bxs-invader, .bx-book-content, .bxs-user, .bx-power-off, .bxs-store {
     margin-top: 13px;
     margin-left: 5px;
+}
+
+.bx-money-withdraw, .bxs-trash, .bx-arrow-from-top, .bx-cart-add {
+    font-size: 24px;
+    margin-right: 10px;
 }
 
 .att {
@@ -151,6 +164,25 @@ h3 {
     border-radius: 80px;
 }
 
+.join-with-code {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-create-room {
+    width: 300px;
+    height: 60px;
+    font-family: 'Staatliches', cursive;
+    font-size: 30px;
+}
+
+.fight-cont {
+     background: inherit;
+     padding-top: 60px;
+     border-radius: 30px 30px 0 0;
+     border: solid #69696938;
+ }
+
 .fighterAvatar2 {
     border-radius: 50px;
     margin-top: 5px;
@@ -166,7 +198,7 @@ h3 {
 .navbar {
     border-bottom: 2px solid #00000038;
     height: 95px;
-    font-size: 26px;
+    font-size: 24px;
     font-family: 'Staatliches', cursive;
     text-transform: uppercase;
 }
@@ -190,7 +222,7 @@ in other input type*/
     flex-wrap: wrap;
     flex-direction: column;
     gap: 1em;
-    margin-top: 150px;
+    margin-top: 90px;
 }
 
 .input-container {
@@ -202,8 +234,10 @@ in other input type*/
 }
 
 .btn-generate {
-    margin-top: 130px;
-    font-size: 22px;
+    margin-top: 190px;
+    font-family: 'Staatliches', cursive;
+    font-size: 30px;
+    border: 1px solid #69696975;
 }
 
 .input-content {

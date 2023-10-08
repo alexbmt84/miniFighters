@@ -16,7 +16,9 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <a href="/home" class="">
                 <i class='bx bx-home text-white'></i>
+                </a>
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('home') }}">Home</a>
                 </li>
@@ -26,8 +28,9 @@
                 </li>
 
                 @auth()
-
-                    <i class='bx bx-book-content text-white'></i>
+                    <a href="/avatars" class="">
+                        <i class='bx bx-book-content text-white'></i>
+                    </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('avatars') }}">Cards</a>
                     </li>
@@ -37,7 +40,9 @@
                         <a class="nav-link">|</a>
                     </li>
 
+                    <a href="/profile" class="">
                     <i class='bx bxs-user text-white'></i>
+                    </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('profile') }}">Profile</a>
                     </li>
@@ -46,7 +51,9 @@
                         <a class="nav-link">|</a>
                     </li>
 
-                    <i class='bx bxs-invader text-white'></i>
+                    <a href="/fight" class="">
+                        <i class='bx bxs-invader text-white'></i>
+                    </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('create.fight') }}">Fight</a>
                     </li>
@@ -55,7 +62,9 @@
                         <a class="nav-link">|</a>
                     </li>
 
-                    <i class='bx bxs-store text-white'></i>
+                    <a href="{{ route('marketplace') }}" class="">
+                        <i class='bx bxs-store text-white'></i>
+                    </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('marketplace') }}">Marketplace</a>
                     </li>
