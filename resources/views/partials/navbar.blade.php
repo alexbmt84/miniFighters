@@ -40,28 +40,6 @@
                         <a class="nav-link">|</a>
                     </li>
 
-                    <a href="/profile" class="">
-                    <i class='bx bxs-user text-white'></i>
-                    </a>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('profile') }}">Profile</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link">|</a>
-                    </li>
-
-                    <a href="/fight" class="">
-                        <i class='bx bxs-invader text-white'></i>
-                    </a>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('create.fight') }}">Fight</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link">|</a>
-                    </li>
-
                     <a href="{{ route('marketplace') }}" class="">
                         <i class='bx bxs-store text-white'></i>
                     </a>
@@ -69,18 +47,21 @@
                         <a class="nav-link text-white" href="{{ route('marketplace') }}">Marketplace</a>
                     </li>
 
-                @else
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
-                    </li>
-
                     <li class="nav-item">
                         <a class="nav-link">|</a>
                     </li>
 
+                    <a href="/profile" class="">
+                        <i class='bx bxs-user text-white'></i>
+                    </a>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
+                        <a class="nav-link text-white" href="{{ route('profile') }}">Profile</a>
+                    </li>
+
+                @else
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
                     </li>
 
                 @endauth
@@ -94,7 +75,7 @@
             @auth()
                 <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('register') }}"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
+                    <a class="nav-link text-white"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
                 </li>
 
                     <li class="nav-item">

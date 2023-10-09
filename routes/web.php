@@ -39,17 +39,13 @@ Route::post('/buy/{fighterId}', [AvatarController::class, 'buy'])->middleware(['
 Route::post('/remove/{fighterId}', [MarketplaceController::class, 'delete'])->middleware(['auth']);
 Route::delete('/delete/{fighterId}', [AvatarController::class, 'delete'])->middleware(['auth']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard')->middleware(['auth']);
-
 Route::get('/arena', [GameController::class, 'join'])->name('fight')->middleware(['auth']);
 Route::get('/arena/{code}', [GameController::class, 'show'])->name('game.show')->middleware(['auth']);
 Route::post('/arena/join', [GameController::class, 'joinWithCode'])->name('game.joinWithCode')->middleware(['auth']);
 
 Route::get('/fight', [GameController::class, 'index'])->name('create.fight')->middleware(['auth']);
 
-Route::get('/profile/{name}', [ProfileController::class, 'findUserProfile'])->name('find.profile');
+Route::get('/profile/{name}', [ProfileController::class, 'findUserProfile'])->name('find.profile')->middleware(['auth']);
 
 Route::post('/game/leave/{code}', [GameController::class, 'leave'])->name('game.leave')->middleware(['auth']);
 
