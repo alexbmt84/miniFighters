@@ -6,6 +6,7 @@ use App\Models\Fighter;
 use App\Models\Marketplace;
 use App\Models\User;
 use App\Services\AvatarService;
+use App\Services\GPTService;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Request as ClientRequest;
@@ -18,9 +19,12 @@ class AvatarController extends Controller
 {
 
     protected $avatarService;
-    public function __construct(AvatarService $avatarService)
+    protected $gptService;
+
+    public function __construct(AvatarService $avatarService, GPTService  $gptService)
     {
         $this->avatarService = $avatarService;
+        $this->gptService = $gptService;
     }
 
     public function index() {
@@ -70,40 +74,17 @@ class AvatarController extends Controller
         return $randomString;
     }
 
-    public function generateAvatar($prompt) {
+    public function segmindCall($prompt) {
 
         return $this->avatarService->kandinskyRequest($prompt);
 
     }
 
-    private function callAPI($prompt) {
-        $apiURL = 'https://api.openai.com/v1/chat/completions';
 
-        $headers = [
-            'Authorization' => 'Bearer ' . config('services.open_ai.api_key'),
-            'Content-Type' => 'application/json',
-        ];
+    public function callGPT($prompt) {
 
-        $response = Http::withHeaders($headers)->withoutVerifying()->post($apiURL, [
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                ["role" => "user", "content" => $prompt]
-            ],
-            'temperature' => 0.7,
-            'n' => 1
-        ]);
+        return $this->gptService->gptRequest($prompt);
 
-        $responseData = $response->json();
-
-        // Check if 'choices' key exists in the response
-        if (!isset($responseData['choices'][0]['message']['content'])) {
-            // Log the full response to debug
-            Log::error('Unexpected OpenAI API Response:', $responseData);
-            return 'Error generating content from OpenAI API.';
-        }
-
-        // Return the message content
-        return $responseData['choices'][0]['message']['content'];
     }
 
     public function store(Request $request) {
@@ -167,12 +148,12 @@ class AvatarController extends Controller
 
         }
 
-        $specialDescription = $this->callAPI($specialMovePrompt . " Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs");
+        $specialDescription = $this->callGPT($specialMovePrompt . " Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs");
 
         $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
-        $translateDescription = $this->callAPI($translateMovePrompt);
+        $translateDescription = $this->callGPT($translateMovePrompt);
 
-        $avatarData = $this->generateAvatar($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        $avatarData = $this->segmindCall($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
 
         // Enregistrement temporaire des données de l'avatar
         $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
@@ -194,8 +175,8 @@ class AvatarController extends Controller
         $firstAttack = floor(rand(10, $hp) / 2);
         $secondAttack = floor(($hp - $firstAttack) / 2);
 
-        $attackName1 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
-        $attackName2 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");
+        $attackName1 = $this->callGPT("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
+        $attackName2 = $this->callGPT("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");
 
         $fighter = Fighter::create([
             'name' => $name,
