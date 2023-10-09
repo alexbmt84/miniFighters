@@ -23,11 +23,9 @@ class AvatarController extends Controller
         }
 
         $userId = auth()->id();
-
         $fighters = Fighter::query()->where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
 
         return view('avatars', compact('fighters'));
-
     }
 
     public function home() {
@@ -38,76 +36,34 @@ class AvatarController extends Controller
 
     }
 
-    public function fighter($id) {
+    public function findFighter($id) {
 
-        $userId = auth()->id();
+        $data = Fighter::findFighter($id);
 
-        $fighter = Fighter::findOrFail($id);
-
-        $fighterId = $fighter->id;
-
-        $name = $fighter->name;
-
-        $avatar = '/storage/' . $fighter->avatar_path;
-
-        $isMyFighter = $this->isMyFighter($userId, $fighterId);
-
-        $isInMarketPlace = Marketplace::isInMarketPlace($fighterId);
-
-        return view('fighter', compact('fighter', 'name', 'avatar', 'isMyFighter', 'isInMarketPlace'));
+        return view('fighter', [
+            'fighter' => $data['fighter'],
+            'name' => $data['name'],
+            'avatar' => $data['avatar'],
+            'isMyFighter' => $data['isMyFighter'],
+            'isInMarketPlace' => $data['isInMarketPlace']
+        ]);
 
     }
 
-    public function generateAvatarDescription($text) {
+    function generateUniqueString($length = 12) {
 
-        $client = new Client([
-            'verify' => false  // Désactiver la vérification SSL si nécessaire
-        ]);
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
 
-        $response = $client->post('https://api.deepai.org/api/text-generator', [
-            'headers' => [
-                'api-key' => config('services.deep_ai.api_key')
-            ],
-            'multipart' => [
-                [
-                    'name'     => 'text',
-                    'contents' => $text
-                ]
-            ]
-        ]);
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-
-        if (isset($data['output'])) {
-            return $data['output'];
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, strlen($chars) - 1);
+            $randomString .= $chars[$randomIndex];
         }
-        return null;
+
+        return $randomString;
     }
 
-    function generateUniqueString($longueur = 12) {
-        $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $chaineAleatoire = '';
-        for ($i = 0; $i < $longueur; $i++) {
-            $indexAleatoire = rand(0, strlen($caracteres) - 1);
-            $chaineAleatoire .= $caracteres[$indexAleatoire];
-        }
-        return $chaineAleatoire;
-    }
-
-    public function generateAvatar($name) {
-
-        $client = new Client([
-            'verify' => false
-        ]);
-
-        $response = $client->get('https://api.multiavatar.com/' . $name . '.png');
-
-        return $response->getBody()->getContents();
-
-    }
-
-    public function generatePerc($prompt) {
+    public function generateAvatar($prompt) {
 
         $client = new Client();
 
@@ -124,46 +80,6 @@ class AvatarController extends Controller
             "prior_steps" => 25,
             "seed" => 9863172,
             "base64" => true
-        ];
-
-        try {
-            $response = $client->post($url, [
-                'json' => $data,
-                'headers' => [
-                    'x-api-key' => $apiKey,
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ]
-            ]);
-
-            return $response->getBody()->getContents(); // retourne les données de l'image directement
-
-        } catch (\Exception $e) {
-            // Handle exceptions, perhaps log them and return a meaningful error to the user
-            return response($e->getMessage(), 500);
-        }
-    }
-
-    public function generateRPG($prompt) {
-
-        $client = new Client([
-            'verify' => false  // Désactiver la vérification SSL si nécessaire
-        ]);
-
-        $apiKey = config('services.segmind.api_key');  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
-        $url = "https://api.segmind.com/v1/sdxl1.0-txt2img";
-
-        $data = [
-            "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, multiple characters, anime, cartoon, realist, photography, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, blurry, bad anatomy, blurred, watermark, grainy, signature, cut off, draft",
-            "samples" => 1,
-            "scheduler" => "ddim",
-            "num_inference_steps" => 25,
-            "guidance_scale" => 9,
-            "seed" => 9863172,
-            "img_width" => 512,
-            "img_height" => 768,
-            "base64" => false
         ];
 
         try {
@@ -244,7 +160,6 @@ class AvatarController extends Controller
 
                 if($description && strlen($description) > 3) {
 
-                    // $specialMovePrompt = "Generate a unique special description for a fighter named " . $name . ". It could be any type of hero, just give a description that will be used to generate the portrait of this fighter.";
                     $specialMovePrompt = "Envision a fighter based on the name '" . $name . "'. $name has some characteristics already : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
 
                 } else {
@@ -276,13 +191,12 @@ class AvatarController extends Controller
 
         }
 
-        // LAST change, trying to use ChatGPT rather than DeepAI for text description generation. Adding a conc.
         $specialDescription = $this->callAPI($specialMovePrompt . " Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs");
 
         $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
-        $translateDescription = $this->generateAvatarDescription($translateMovePrompt);
+        $translateDescription = $this->callAPI($translateMovePrompt);
 
-        $avatarData = $this->generatePerc($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        $avatarData = $this->generateAvatar($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
 
         // Enregistrement temporaire des données de l'avatar
         $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
@@ -319,39 +233,15 @@ class AvatarController extends Controller
             'description' => $translateDescription
         ]);
 
-        $isMyFighter = $this->isMyFighter($userId, $fighter->id);
+        $isMyFighter = Fighter::isMyFighter($userId, $fighter->id);
         $isInMarketPlace = Marketplace::isInMarketPlace($fighter->id);
 
         return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter', 'isMyFighter', 'isInMarketPlace'));
     }
 
-    public function isMyFighter($userId, $fighterId) {
-
-        $query = Fighter::query()
-            ->where('user_id', $userId)
-            ->where('id', $fighterId)
-            ->first();
-
-        if ($query) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
     public function delete($fighterId) {
 
-        if (!auth()->user()) {
-            abort(404);
-        }
-
-        $user = auth()->user();
-
-        Fighter::query()->where('id', $fighterId)->delete();
-
-        $user->wallet += 50;
-        $user->save();
+        Fighter::deleteFighter($fighterId);
 
         return redirect('/avatars');
 
@@ -359,51 +249,25 @@ class AvatarController extends Controller
 
     public function sell($fighterId) {
 
-        if (!auth()->user()) {
-            abort(404);
-        }
-
-        Fighter::listForSale($fighterId);
+        Fighter::sellFighter($fighterId);
 
         return redirect('/marketplace');
 
     }
 
-    public function buy($fighterId) {
+    public function buy($fighterId)
+    {
+        try {
 
-        if (!auth()->user()) {
-            abort(404);
-        }
+            Fighter::buyFighter($fighterId);
 
-        $user = auth()->user();
-        $newUserId = auth()->id();
+            return redirect('/avatars');
 
-        $fighter = Fighter::find($fighterId);
-
-        if ($user->wallet >= 400) {
-
-            $ownerId = $fighter->user_id;
-            $owner = User::find($ownerId);
-            $owner->wallet +=400;
-            $owner->save();
-
-            $fighter->user_id = $newUserId;
-            $fighter->updated_at = now();
-
-            $fighter->save();
-
-            $user->wallet -=400;
-            $user->save();
-
-            Marketplace::where('fighter_id', $fighterId)->delete();
-
-        } else {
+        } catch (\Exception $e) {
 
             return redirect('/marketplace');
 
         }
-
-        return redirect('/avatars');
 
     }
 

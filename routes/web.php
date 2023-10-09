@@ -30,7 +30,7 @@ Route::get('/home', function () {
 Route::get('/avatars', [AvatarController::class, 'index'])->name('avatars')->middleware(['auth']);
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace')->middleware(['auth']);
 Route::post('/generate', [AvatarController::class, 'store'])->name('generate')->middleware(['auth']);
-Route::get('/fighter/{id}', [AvatarController::class, 'fighter'])->name('fighter');
+Route::get('/fighter/{id}', [AvatarController::class, 'findFighter'])->name('fighter');
 Route::get('/fight', [FightController::class, 'index'])->name('fight')->middleware(['auth']);
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
 
