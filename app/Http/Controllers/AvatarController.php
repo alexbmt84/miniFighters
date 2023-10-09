@@ -276,7 +276,6 @@ class AvatarController extends Controller
 
         }
 
-        //$specialMovePrompt = "Envision a character based on the name '" . $name . "'. This character will be part of a cards game. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation.";
         // LAST change, trying to use ChatGPT rather than DeepAI for text description generation. Adding a conc.
         $specialDescription = $this->callAPI($specialMovePrompt . " Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs");
 
@@ -299,32 +298,15 @@ class AvatarController extends Controller
 
         $filePath = $dir . '/' . $filename;
 
+        // Points de vies et attaques
         $hp = rand(20, 100);
 
         $firstAttack = floor(rand(10, $hp) / 2);
         $secondAttack = floor(($hp - $firstAttack) / 2);
 
-        $wordlists = include resource_path('wordlist.php');
-
-          /*      $attackNames = [];
-
-                for ($i = 0; $i < 2; $i++ ) {
-
-                    $randomNoun = $wordlists['nouns'][array_rand($wordlists['nouns'])];
-                    $randomAdjective = $wordlists['adjectives'][array_rand($wordlists['adjectives'])];
-                    $randomEnd = $wordlists['ending'][array_rand($wordlists['ending'])];
-
-                    $attackNames[] = $randomNoun . ' ' . $randomAdjective . ' ' . $randomEnd;
-
-                }
-
-                $attackName1 = $attackNames[0];
-                $attackName2 = $attackNames[1];*/
-
         $attackName1 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
         $attackName2 = $this->callAPI("Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");
 
-        // Stockez le chemin et le nom dans la base de données
         $fighter = Fighter::create([
             'name' => $name,
             'avatar_path' => $filePath,
@@ -349,7 +331,6 @@ class AvatarController extends Controller
             ->where('user_id', $userId)
             ->where('id', $fighterId)
             ->first();
-
 
         if ($query) {
             return true;

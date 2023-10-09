@@ -19,6 +19,16 @@ class ProfileController extends Controller
 
     public function findUserProfile($name) {
 
+        if(!auth()->user()) {
+            abort(404);
+        }
+
+        $myName = auth()->user()->name;
+
+        if (strtolower($name) == strtolower($myName)) {
+            return redirect('/profile');
+        }
+
         $user = User::query()->where('name', $name)->first();
 
         if(!$user) {

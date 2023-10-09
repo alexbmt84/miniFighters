@@ -28,9 +28,9 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
 </div>
 
-<form class="text-center" action="/" method="POST">
-    <button class="btn btn-dark mt-3">Add Friend</button>
-</form>
+    <form class="text-center" action="/" method="POST">
+        <button class="btn btn-dark mt-3">Add Friend</button>
+    </form>
 
 <main>
 

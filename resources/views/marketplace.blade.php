@@ -84,10 +84,9 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
                     </div>
                 </div>
-
             </a>
-            <a href="/profile/{{ $user->name }}" class="nav-link">
-                <p class="mt-3 text-white" id="owner"><i class='bx bxs-user' ></i> {{ $user->name }}</p>
+            <a href="/profile/{{ $fighter->user->name }}" class="nav-link">
+                <p class="mt-3 text-white" id="owner"><i class='bx bxs-user' ></i> {{ $fighter->user->name }}</p>
             </a>
 
         </div>
