@@ -21,7 +21,7 @@ class AvatarService
 
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background",
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography",
             "samples" => 1,
             "num_inference_steps" => 25,
             "img_width" => 512,
