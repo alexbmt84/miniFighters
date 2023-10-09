@@ -22,7 +22,7 @@
 
 .title-2 {
     font-size: 12px;
-    text-align: justify;
+    text-align: center;
     text-transform: uppercase;
     color: #fff6ed;
 
@@ -36,17 +36,17 @@
 
 .title-back {
     font-size: 19px;
-    font-weight: 900;
     text-align: center;
     text-transform: uppercase;
+    font-weight: bold;
 }
 
 .atk-dg {
     font-size: 20px;
     text-align: center;
     margin-top: 0;
+    color: rgba(154, 115, 30, 0.7);
     text-transform: uppercase;
-    color: #fff6ed;
 
 }
 
