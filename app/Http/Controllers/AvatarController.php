@@ -403,7 +403,6 @@ class AvatarController extends Controller
 
         }
 
-
         return redirect('/avatars');
 
     }
