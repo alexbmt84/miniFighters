@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Fighter;
 use App\Models\Marketplace;
 use App\Models\User;
+use App\Services\AvatarService;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\Request as ClientRequest;
@@ -15,6 +16,12 @@ use Illuminate\Support\Facades\Storage;
 
 class AvatarController extends Controller
 {
+
+    protected $avatarService;
+    public function __construct(AvatarService $avatarService)
+    {
+        $this->avatarService = $avatarService;
+    }
 
     public function index() {
 
@@ -65,39 +72,8 @@ class AvatarController extends Controller
 
     public function generateAvatar($prompt) {
 
-        $client = new Client();
+        return $this->avatarService->kandinskyRequest($prompt);
 
-        $apiKey = config('services.segmind.api_key');  // Store this in your .env file and retrieve with env('YOUR_API_KEY')
-        $url = "https://api.segmind.com/v1/kandinsky2.2-txt2img";
-
-        $data = [
-            "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background",
-            "samples" => 1,
-            "num_inference_steps" => 25,
-            "img_width" => 512,
-            "img_height" => 768,
-            "prior_steps" => 25,
-            "seed" => 9863172,
-            "base64" => true
-        ];
-
-        try {
-            $response = $client->post($url, [
-                'json' => $data,
-                'headers' => [
-                    'x-api-key' => $apiKey,
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ]
-            ]);
-
-            return $response->getBody()->getContents(); // retourne les données de l'image directement
-
-        } catch (\Exception $e) {
-            // Handle exceptions, perhaps log them and return a meaningful error to the user
-            return response($e->getMessage(), 500);
-        }
     }
 
     private function callAPI($prompt) {
