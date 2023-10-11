@@ -17,7 +17,7 @@
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <a href="/home" class="">
-                <i class='bx bx-home text-white'></i>
+                    <i class='bx bxs-home text-white'></i>
                 </a>
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('home') }}">Home</a>
@@ -29,7 +29,7 @@
 
                 @auth()
                     <a href="/avatars" class="">
-                        <i class='bx bx-book-content text-white'></i>
+                        <i class='bx bxs-book-content text-white'></i>
                     </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('avatars') }}">Cards</a>
@@ -60,6 +60,9 @@
 
                 @else
 
+                    <a href="{{ route('login') }}" class="">
+                        <i class='bx bxs-user text-white'></i>
+                    </a>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
                     </li>

@@ -133,7 +133,7 @@ class AvatarController extends Controller
         $translateMovePrompt = "Please translate this description in French : " . $specialDescription;
         $translateDescription = $this->callGPT($translateMovePrompt);
 
-        $avatarData = $this->segmindCall($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece, game character");
+        $avatarData = $this->segmindCall($specialDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
 
         // Enregistrement temporaire des données de l'avatar
         $tempPath = tempnam(sys_get_temp_dir(), 'fighter');

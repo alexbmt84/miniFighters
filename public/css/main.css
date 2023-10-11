@@ -92,7 +92,7 @@ option {
     border: 2px solid black;
 }
 
-.bx-home, .bxs-invader, .bx-book-content, .bxs-user, .bx-power-off, .bxs-store {
+.bxs-home, .bxs-invader, .bxs-book-content, .bxs-user, .bx-power-off, .bxs-store {
     margin-top: 13px;
     margin-left: 5px;
 }
