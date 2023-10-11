@@ -48,4 +48,14 @@ class User extends Authenticatable
         return $this->hasMany(Fighter::class);
     }
 
+    public function incrementWallet($amount) {
+        $this->wallet += $amount;
+        $this->save();
+    }
+
+    public function decrementWallet($amount) {
+        $this->wallet -= $amount;
+        $this->save();
+    }
+
 }

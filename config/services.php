@@ -40,6 +40,10 @@ return [
 
     'deep_ai' => [
         'api_key' => env('DEEP_AI_API_KEY')
+    ],
+
+    'deepL_api' => [
+        'api_key' => env('DEEPL_API_KEY')
     ]
 
 ];

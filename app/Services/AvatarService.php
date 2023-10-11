@@ -19,9 +19,10 @@ class AvatarService
         $apiKey = config('services.segmind.api_key');
         $url = "https://api.segmind.com/v1/kandinsky2.2-txt2img";
 
+        //Last Modif
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, photography",
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography",
             "samples" => 1,
             "num_inference_steps" => 25,
             "img_width" => 512,

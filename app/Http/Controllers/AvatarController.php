@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Fighter;
 use App\Models\Marketplace;
-use App\Models\User;
 use App\Services\AvatarService;
+use App\Services\DeepLService;
 use App\Services\GPTService;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use Illuminate\Http\Client\Request as ClientRequest;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -20,11 +17,13 @@ class AvatarController extends Controller
 
     protected $avatarService;
     protected $gptService;
+    protected $deeplService;
 
-    public function __construct(AvatarService $avatarService, GPTService  $gptService)
+    public function __construct(AvatarService $avatarService, GPTService  $gptService, DeepLService $deeplService)
     {
         $this->avatarService = $avatarService;
         $this->gptService = $gptService;
+        $this->deeplService = $deeplService;
     }
 
     public function index() {
@@ -73,6 +72,11 @@ class AvatarController extends Controller
 
     }
 
+    public function callDeepL($translatePrompt) {
+        return $this->deeplService->translateWithDeepl($translatePrompt);
+    }
+
+
     public function store(Request $request) {
 
         if (!auth()->user()) {
@@ -96,8 +100,8 @@ class AvatarController extends Controller
         $fighterDescription = $this->callGPT($prompt . " " . $gptPromptParam);
 
         // LAST API MODIF
-        $translatePrompt = "Please translate this description in French : " . $fighterDescription;
-        $translateDescription = $this->callGPT($translatePrompt);
+        $translatePrompt = $fighterDescription;
+        $translateDescription = $this->callDeepL($translatePrompt);
 
         $avatarData = $this->segmindCall($fighterDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
         $filePath = Fighter::saveFighterAvatar($avatarData);
@@ -124,8 +128,7 @@ class AvatarController extends Controller
         $isMyFighter = Fighter::isMyFighter($userId, $fighter->id);
         $isInMarketPlace = Marketplace::isInMarketPlace($fighter->id);
 
-        $user->wallet -= 200;
-        $user->save();
+        $user->decrementWallet(200);
 
         return view('fighter', ['avatar' => Storage::url($filePath)], compact('name', 'fighter', 'isMyFighter', 'isInMarketPlace'));
     }

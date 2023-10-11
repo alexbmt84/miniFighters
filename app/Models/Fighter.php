@@ -32,7 +32,7 @@ class Fighter extends Model
 
         Fighter::query()->where('id', $fighterId)->delete();
 
-        $user->wallet += 50;
+        $user->incrementWallet(50);
         $user->save();
 
     }
@@ -62,7 +62,7 @@ class Fighter extends Model
 
             $ownerId = $fighter->user_id;
             $owner = User::find($ownerId);
-            $owner->wallet += 400;
+            $owner->incrementWallet(400);
             $owner->save();
 
             $fighter->user_id = $newUserId;
@@ -70,7 +70,7 @@ class Fighter extends Model
 
             $fighter->save();
 
-            $user->wallet -= 400;
+            $user->decrementWallet(400);
             $user->save();
 
             Marketplace::where('fighter_id', $fighterId)->delete();
