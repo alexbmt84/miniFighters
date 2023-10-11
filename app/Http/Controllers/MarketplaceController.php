@@ -27,7 +27,7 @@ class MarketplaceController extends Controller
                 ->get();
 
         } else {
-            $users = collect(); // empty collection
+            $fighters = null; // empty collection
         }
 
 

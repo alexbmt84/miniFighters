@@ -23,75 +23,81 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
 <main style="height: 100vh">
 
-    @foreach ($fighters as $fighter)
+    @if($fighters)
 
-        <div class="fighterContainer">
+        @foreach ($fighters as $fighter)
 
-            <a href="{{ route('fighter', $fighter->id) }}">
+            <div class="fighterContainer">
 
-                <div class="flip-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front">
-                            <div class="fighter-name">
-                                <p class="title">{{$fighter->name}}</p>
-                            </div>
-                            <img class="fighterAvatar" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
-                            <p class="hp">{{ $fighter->hp }} PV</p>
-                        </div>
+                <a href="{{ route('fighter', $fighter->id) }}">
 
-                        <div class="flip-card-back">
-                            <div class="atk-cont">
-
-                                <div class="card-back-header">
-                                    <div class="avatar-circle">
-                                        <img class="fighterAvatar2" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
-                                    </div>
-
-                                    <div class="stars">
-                                        @if($fighter->hp <= 25)
-                                            <i class='bx bxs-star' ></i>
-                                        @elseif($fighter->hp <= 40)
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                        @elseif($fighter->hp <= 60)
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                        @elseif($fighter->hp <= 80)
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                        @elseif($fighter->hp > 80)
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                            <i class='bx bxs-star' ></i>
-                                        @endif
-                                    </div>
-                                    <p class="title-back">{{$fighter->name}} <span class="title-back">- {{ $fighter->hp }} PV</span></p>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="fighter-name">
+                                    <p class="title">{{$fighter->name}}</p>
                                 </div>
-
-                                <p class="title-2">{{ $fighter->attack_name_1 }}</p>
-                                <p class="atk-dg">| {{ $fighter->attack_damages_1 }} DG |</p>
-
-                                <p class="title-2">{{ $fighter->attack_name_2 }}</p>
-                                <p class="atk-dg">| {{ $fighter->attack_damages_2 }} DG |</p>
-
+                                <img class="fighterAvatar" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
+                                <p class="hp">{{ $fighter->hp }} PV</p>
                             </div>
+
+                            <div class="flip-card-back">
+                                <div class="atk-cont">
+
+                                    <div class="card-back-header">
+                                        <div class="avatar-circle">
+                                            <img class="fighterAvatar2" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
+                                        </div>
+
+                                        <div class="stars">
+                                            @if($fighter->hp <= 25)
+                                                <i class='bx bxs-star' ></i>
+                                            @elseif($fighter->hp <= 40)
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                            @elseif($fighter->hp <= 60)
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                            @elseif($fighter->hp <= 80)
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                            @elseif($fighter->hp > 80)
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                                <i class='bx bxs-star' ></i>
+                                            @endif
+                                        </div>
+                                        <p class="title-back">{{$fighter->name}} <span class="title-back">- {{ $fighter->hp }} PV</span></p>
+                                    </div>
+
+                                    <p class="title-2">{{ $fighter->attack_name_1 }}</p>
+                                    <p class="atk-dg">| {{ $fighter->attack_damages_1 }} DG |</p>
+
+                                    <p class="title-2">{{ $fighter->attack_name_2 }}</p>
+                                    <p class="atk-dg">| {{ $fighter->attack_damages_2 }} DG |</p>
+
+                                </div>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
-            </a>
-            <a href="/profile/{{ $fighter->user->name }}" class="nav-link">
-                <p class="mt-3 text-white" id="owner"><i class='bx bxs-user' ></i> {{ $fighter->user->name }}</p>
-            </a>
+                </a>
+                <a href="/profile/{{ $fighter->user->name }}" class="nav-link">
+                    <p class="mt-3 text-white" id="owner"><i class='bx bxs-user' ></i> {{ $fighter->user->name }}</p>
+                </a>
 
-        </div>
+            </div>
 
-    @endforeach
+        @endforeach
+
+    @else
+        <h2 class="text-white mx-auto">No fighters for sale yet</h2>
+    @endif
 
 </main>
 
