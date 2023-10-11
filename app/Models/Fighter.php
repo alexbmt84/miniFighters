@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\UploadedFile;
 
 class Fighter extends Model
 {
@@ -136,7 +137,68 @@ class Fighter extends Model
 
     }
 
-    public function generateAvatarDescription($text) {
+    public static function makeFighterPrompt($name, $description, $type): String {
+
+        switch ($type) {
+
+            case 'Fighter':
+                if($description && strlen($description) > 3) {
+                    return "Envision a fighter based on the name '" . $name . "'. $name has some characteristics already : $description. This fighter will be part of a cards game and it could be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+                } else {
+                    return "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+                }
+
+            case 'Civilian':
+                if($description && strlen($description) > 3) {
+                    return "Envision an human civilian based on the name '" . $name . "'. $name has some characteristics already : $description. This civilian will have some abilities and is part of a world that will contain some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                } else {
+                    return "Envision an human civilian based on the name '" . $name . "'. This civilian will have some abilities and is part of world that contains some super-heroes, mystic characters, gangsters, cyborgs, monsters. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, creative and structured.";
+                }
+
+            default:
+                return "Envision a fighter based on the name '" . $name . "'. This fighter will be part of a cards game and it can be a superhero with astonishing abilities, a feared gangster from dark alleyways, a mystical hero of legend, a futuristic cyborg, a simple civilian if he/she is having a first and last name that sounds like human or any other formidable and striking figure that you want to imagine. Picture him/her with distinctive features that resonate with the essence of his/her name and his/her unique story. Craft a description that captures the imagination and provides a rich basis for his/her visual representation. Please make a creative description, around 50 words and make it complete, not unfinished.";
+
+        }
+
+    }
+
+    public static function generateUniqueString($length = 12): String {
+
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, strlen($chars) - 1);
+            $randomString .= $chars[$randomIndex];
+        }
+
+        return $randomString;
+    }
+
+    public static function saveFighterAvatar($avatarData): String
+    {
+
+        // Enregistrement temporaire des données de l'avatar
+        $tempPath = tempnam(sys_get_temp_dir(), 'fighter');
+        file_put_contents($tempPath, $avatarData);
+
+        // Unique file name generation
+        $uniqueName = self::generateUniqueString();
+
+        // Convertir le fichier temporaire en instance UploadedFile
+        $file = new UploadedFile($tempPath, $uniqueName . '.png', null, null, true);
+
+        // Stockage de l'avatar dans le disque public
+        $dir = "fighters";
+        $filename = $uniqueName . '.jpg';
+        $file->storeAs($dir, $filename, 'public');
+
+        return $dir . '/' . $filename;
+
+    }
+
+    // DEEPAI Text generator
+    public function generateFighterDescription($text) {
 
         $client = new Client([
             'verify' => false  // Désactiver la vérification SSL si nécessaire
