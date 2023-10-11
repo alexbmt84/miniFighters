@@ -60,7 +60,7 @@ class AvatarController extends Controller
 
     }
 
-    public function segmindCall($prompt) {
+    public function callSegmind($prompt) {
 
         return $this->avatarService->kandinskyRequest($prompt);
 
@@ -75,7 +75,6 @@ class AvatarController extends Controller
     public function callDeepL($translatePrompt) {
         return $this->deeplService->translateWithDeepl($translatePrompt);
     }
-
 
     public function store(Request $request) {
 
@@ -103,12 +102,13 @@ class AvatarController extends Controller
         $translatePrompt = $fighterDescription;
         $translateDescription = $this->callDeepL($translatePrompt);
 
-        $avatarData = $this->segmindCall($fighterDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        $avatarData = $this->callSegmind($fighterDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
         $filePath = Fighter::saveFighterAvatar($avatarData);
 
-        $hp = rand(20, 100);
-        $attack1 = floor(rand(10, $hp) / 2);
-        $attack2 = floor(($hp - $attack1) / 2);
+        $hp = Fighter::generateFighterHp();
+        $attack1 = floor(rand(100, $hp) / 2);
+        $attack2 = floor(rand(50, 300));
+        //$attack2 = floor(($hp - $attack1) / 2);
 
         $attackName1 = $this->callGPT($gptPromptParam . " En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
         $attackName2 = $this->callGPT($gptPromptParam . " En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");

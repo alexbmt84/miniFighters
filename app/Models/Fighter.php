@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\UploadedFile;
+use Ramsey\Uuid\Type\Integer;
 
 class Fighter extends Model
 {
@@ -173,6 +174,14 @@ class Fighter extends Model
         }
 
         return $randomString;
+    }
+
+    public static function generateFighterHp() {
+        $min = 100;
+        $max = 1000;
+        $bias = 2;  // Augmenter cette valeur pour rendre les scores élevés encore plus rares.
+        $randValue = mt_rand($min, $max);
+        return (int) ($min + pow(($randValue - $min) / ($max - $min), $bias) * ($max - $min));
     }
 
     public static function saveFighterAvatar($avatarData): String
