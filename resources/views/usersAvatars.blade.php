@@ -28,9 +28,20 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
 </div>
 
-    <form class="text-center" action="/" method="POST">
-        <button class="btn btn-dark mt-3">Add Friend</button>
+@if(auth()->user()->isFriendsWith($user))
+    <div class="text-center mt-3">
+        <button class="btn btn-success mt-3" disabled>Amis</button>
+    </div>
+@elseif(auth()->user()->hasSentFriendRequestTo($user))
+    <div class="text-center mt-3">
+        <button class="btn btn-dark mt-3" disabled>Demande d'ami envoyée</button>
+    </div>
+@else
+    <form class="text-center mt-3" action="{{ route('friend.request', $user->id) }}" method="POST">
+        @csrf
+        <button class="btn btn-dark mt-3">Ajouter comme ami</button>
     </form>
+@endif
 
 <main>
 

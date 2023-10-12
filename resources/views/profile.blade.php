@@ -35,6 +35,31 @@
 
             <p class="text-center text-white mt-3"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} CR</p>
 
+            @foreach(auth()->user()->friendRequestsPending as $requester)
+                <div class="text-center mb-3 text-white">
+                    {{ $requester->name }} veut être votre ami.
+                    <form action="{{ route('friend.accept', $requester->id) }}" method="POST" class="mt-3 mb-3">
+                        @csrf
+                        <button class="btn btn-success col-1">Accepter</button>
+                    </form>
+                    <form action="{{ route('friend.decline', $requester->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger col-1">Refuser</button>
+                    </form>
+                </div>
+            @endforeach
+
+            <h2 class="mx-auto text-center text-white">Amis : </h2>
+            @foreach(auth()->user()->getFriendsListAttribute() as $friend)
+                <div class="text-center mb-3 text-white">
+                    <a href="{{ route('find.profile', $friend->name) }}" class="nav-link">
+                        {{ $friend->name }}
+                    </a>
+                </div>
+            @endforeach
+
+
             <script src="/js/photo.js" defer></script>
 
         </body>

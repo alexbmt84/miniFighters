@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\FightController;
+use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\ProfileController;
@@ -60,5 +61,13 @@ Route::middleware(['web'])->group(function () {
         return true; // Pour l'instant, tous les utilisateurs autorisés.
     });
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/friend/request/{user}', [FriendshipController::class, 'send'])->name('friend.request');
+    Route::post('/friend/accept/{user}', [FriendshipController::class, 'accept'])->name('friend.accept');
+    Route::delete('/friend/decline/{user}', [FriendshipController::class, 'decline'])->name('friend.decline');
+    Route::get('/friends', [FriendshipController::class, 'index'])->name('friends.index');
+});
+
 
 require __DIR__.'/auth.php';
