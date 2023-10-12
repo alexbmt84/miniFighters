@@ -20,15 +20,17 @@ class AvatarService
         $url = "https://api.segmind.com/v1/kandinsky2.2-txt2img";
 
         //Last Modif
+        //9863172 Original Seed
+        //4078969122 Last Seed
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography",
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography, hyper realist",
             "samples" => 1,
-            "num_inference_steps" => 25,
+            "num_inference_steps" => 50,
             "img_width" => 512,
             "img_height" => 768,
             "prior_steps" => 25,
-            "seed" => 9863172,
+            "seed" => 1602850129,
             "base64" => true
         ];
 

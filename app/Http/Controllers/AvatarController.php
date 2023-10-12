@@ -102,12 +102,13 @@ class AvatarController extends Controller
         $translatePrompt = $fighterDescription;
         $translateDescription = $this->callDeepL($translatePrompt);
 
-        $avatarData = $this->callSegmind($fighterDescription . " sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        //$avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        $avatarData = $this->callSegmind($fighterDescription . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors");
         $filePath = Fighter::saveFighterAvatar($avatarData);
 
         $hp = Fighter::generateFighterHp();
         $attack1 = floor(rand(100, $hp) / 2);
-        $attack2 = floor(rand(50, 300));
+        $attack2 = floor(rand(100, 300));
         //$attack2 = floor(($hp - $attack1) / 2);
 
         $attackName1 = $this->callGPT($gptPromptParam . " En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");

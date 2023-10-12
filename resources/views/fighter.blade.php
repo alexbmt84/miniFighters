@@ -32,21 +32,21 @@
                                     <div class="avatar-container">
                                         <img class="fighterAvatar2" src="{{ $avatar }}" alt="Generated Avatar">
                                         <div class="stars2">
-                                            @if($fighter->hp <= 25)
+                                            @if($fighter->hp <= 200)
                                                 <i class='bx bxs-star star-big-card' ></i>
-                                            @elseif($fighter->hp <= 40)
-                                                <i class='bx bxs-star star-big-card' ></i>
-                                                <i class='bx bxs-star star-big-card' ></i>
-                                            @elseif($fighter->hp <= 60)
+                                            @elseif($fighter->hp <= 400)
                                                 <i class='bx bxs-star star-big-card' ></i>
                                                 <i class='bx bxs-star star-big-card' ></i>
-                                                <i class='bx bxs-star star-big-card' ></i>
-                                            @elseif($fighter->hp <= 80)
+                                            @elseif($fighter->hp <= 600)
                                                 <i class='bx bxs-star star-big-card' ></i>
                                                 <i class='bx bxs-star star-big-card' ></i>
                                                 <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp <= 800)
                                                 <i class='bx bxs-star star-big-card' ></i>
-                                            @elseif($fighter->hp > 80)
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                                <i class='bx bxs-star star-big-card' ></i>
+                                            @elseif($fighter->hp > 800)
                                                 <i class='bx bxs-star star-big-card' ></i>
                                                 <i class='bx bxs-star star-big-card' ></i>
                                                 <i class='bx bxs-star star-big-card' ></i>
