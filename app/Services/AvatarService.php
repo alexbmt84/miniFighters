@@ -21,16 +21,17 @@ class AvatarService
 
         //Last Modif
         //9863172 Original Seed
-        //4078969122 Last Seed
+        //4078969122 2nd Seed
+        //1602850129 Last seed
         $data = [
             "prompt" => $prompt,
-            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography, hyper realist",
+            "negative_prompt" => "lowres, text, letters, letter, error, cropped, white monochrome background, white background, white bg, empty background, monochrome background, realism, photography, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, mutated hands and fingers, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation",
             "samples" => 1,
             "num_inference_steps" => 50,
             "img_width" => 512,
             "img_height" => 768,
             "prior_steps" => 25,
-            "seed" => 1602850129,
+            "seed" => 9863172,
             "base64" => true
         ];
 

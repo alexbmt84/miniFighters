@@ -51,6 +51,7 @@
             @endforeach
 
             <h2 class="mx-auto text-center text-white">Amis : </h2>
+
             @foreach(auth()->user()->getFriendsListAttribute() as $friend)
                 <div class="text-center mb-3 text-white">
                     <a href="{{ route('find.profile', $friend->name) }}" class="nav-link">
@@ -58,7 +59,6 @@
                     </a>
                 </div>
             @endforeach
-
 
             <script src="/js/photo.js" defer></script>
 

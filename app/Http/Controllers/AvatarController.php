@@ -102,8 +102,8 @@ class AvatarController extends Controller
         $translatePrompt = $fighterDescription;
         $translateDescription = $this->callDeepL($translatePrompt);
 
-        //$avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
-        $avatarData = $this->callSegmind($fighterDescription . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors");
+        $avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        //avatarData = $this->callSegmind($fighterDescription . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors");
         $filePath = Fighter::saveFighterAvatar($avatarData);
 
         $hp = Fighter::generateFighterHp();
