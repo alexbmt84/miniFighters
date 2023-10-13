@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/friend/accept/{user}', [FriendshipController::class, 'accept'])->name('friend.accept');
     Route::delete('/friend/decline/{user}', [FriendshipController::class, 'decline'])->name('friend.decline');
     Route::get('/friends', [FriendshipController::class, 'index'])->name('friends.index');
+    Route::post('/save-avatar', [ProfileController::class, 'saveAvatar']);
 });
 
 

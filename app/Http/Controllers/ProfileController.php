@@ -43,4 +43,14 @@ class ProfileController extends Controller
 
     }
 
+    public function saveAvatar(Request $request) {
+        $request->validate([
+            'avatar' => 'required|image|max:2048',
+        ]);
+
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        auth()->user()->update(['avatar' => $avatarPath]);
+        return response()->json(['message' => 'Avatar uploaded successfully!']);
+    }
+
 }

@@ -62,6 +62,7 @@ class AvatarController extends Controller
 
     public function callSegmind($prompt) {
 
+        //return $this->avatarService->rpgRequest($prompt); // Carte magie ?
         return $this->avatarService->kandinskyRequest($prompt);
 
     }
@@ -102,7 +103,7 @@ class AvatarController extends Controller
         $translatePrompt = $fighterDescription;
         $translateDescription = $this->callDeepL($translatePrompt);
 
-        $avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece");
+        $avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece, full body pose");
         //avatarData = $this->callSegmind($fighterDescription . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors");
         $filePath = Fighter::saveFighterAvatar($avatarData);
 

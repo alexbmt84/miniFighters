@@ -36,7 +36,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
                                         <p class="title">{{$fighter->name}}</p>
                                     </div>
                                     <img class="fighterAvatar" src="storage/{{ $fighter->avatar_path }}" alt="Generated Avatar">
-                                    <p class="hp">{{ $fighter->hp }} PV</p>
+                                    <p class="hp" datatype="{{ $fighter->hp }}">{{ $fighter->hp }} PV</p>
                                 </div>
 
                                 <div class="flip-card-back">
@@ -91,6 +91,19 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
         @endforeach
 
         </main>
+<script>
+    //Last Modif
+    var flipCard = document.querySelectorAll('.flip-card-front');
+    let hpElements = document.querySelectorAll('.hp');
 
+    hpElements.forEach(function(element) {
+        let hpValue = element.getAttribute('datatype');
+
+        if (hpValue <= 200) {
+
+        }
+        console.log(hpValue);
+    });
+</script>
     </body>
     </html>
