@@ -31,7 +31,12 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
                         <div class="flip-card">
                             <div class="flip-card-inner">
-                                <div class="flip-card-front">
+
+                                @if($fighter->isInMarketPlace)
+                                    <div class="flip-card-front-market">
+                                @else
+                                    <div class="flip-card-front">
+                                @endif
                                     <div class="fighter-name">
                                         <p class="title">{{$fighter->name}}</p>
                                     </div>
@@ -39,7 +44,12 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
                                     <p class="hp" datatype="{{ $fighter->hp }}">{{ $fighter->hp }} PV</p>
                                 </div>
 
-                                <div class="flip-card-back">
+                                @if($fighter->isInMarketPlace)
+                                    <div class="flip-card-back">
+                                        @else
+                                            <div class="flip-card-back">
+                                @endif
+
                                     <div class="atk-cont">
 
                                         <div class="card-back-header">

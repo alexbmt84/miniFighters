@@ -35,6 +35,10 @@ class AvatarController extends Controller
         $userId = auth()->id();
         $fighters = Fighter::query()->where('user_id', $userId)->orderBy('updated_at', 'desc')->get();
 
+        foreach ($fighters as $fighter) {
+            $fighter->isInMarketPlace = Marketplace::isInMarketPlace($fighter->id);
+        }
+
         return view('avatars', compact('fighters'));
     }
 

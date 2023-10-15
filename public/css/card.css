@@ -61,7 +61,7 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
+    transition: transform 0.5s;
     transform-style: preserve-3d;
 }
 
@@ -103,6 +103,28 @@
     background: linear-gradient( 120deg, #141414 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
     color: white;
 }
+
+.flip-card-front-market {
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid rgba(158, 48, 169, 0.33);
+    border-radius: 1rem;
+    padding: 35px 50px;
+}
+
+.flip-card-front-market {
+    background: linear-gradient( 120deg, #302e2e00 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
+    color: white;
+    opacity: 35%;
+}
+
 
 .flip-card-back {
     background: linear-gradient( 120deg, #141414 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
