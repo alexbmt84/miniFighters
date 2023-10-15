@@ -45,7 +45,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
                                 </div>
 
                                 @if($fighter->isInMarketPlace)
-                                    <div class="flip-card-back">
+                                    <div class="flip-card-back-market">
                                         @else
                                             <div class="flip-card-back">
                                 @endif

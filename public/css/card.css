@@ -84,7 +84,7 @@
     padding: 35px 50px;
 }
 
-.flip-card-back {
+.flip-card-back, .flip-card-back-market {
     box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
     position: absolute;
     display: flex;
@@ -129,5 +129,12 @@
 .flip-card-back {
     background: linear-gradient( 120deg, #141414 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
     color: white;
+    transform: rotateY(180deg);
+}
+
+.flip-card-back-market {
+    background: linear-gradient( 120deg, #302e2e00 60%, rgb(87 82 80) 88%, rgb(255 227 217) 40%, rgb(80 50 111 / 60%) 48% );
+    color: white;
+    opacity: 35%;
     transform: rotateY(180deg);
 }
