@@ -98,38 +98,40 @@ class AvatarController extends Controller
         $name = $request->input('name');
         $description = $request->input('description');
 
-        $gptPromptParam = "Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. You'll give me the output under a JSON format, like this example : {
-            'Description': 'Harley Queen, the enigmatic Queen of Chaos, strides through the shadows in an elegant black leather jumpsuit with purple accents. With her mischievous smile and piercing green eyes, she brandishes a pair of electrified tonfas, crackling with power. Her hair, a vibrant mix of crimson and platinum, cascades down her back, reflecting her dual nature. Beneath her enigmatic allure lies a mysterious past of loyalty, betrayal and vengeance.',
-            'Attaques': ['Attack 1: Fulgurante Explosion - Super Blast generates a devastating blast of explosive energy that pulverizes its opponents.', '
-            Attack 2: Celestial Detonation - Super Blast channels his explosive power to create a devastating shockwave that annihilates his enemies.'],
-            'Caractéristiques': {
-                'Strength': 8,
-                'Endurance': 7,
-                'Intelligence'': 6,
-                'Agility': 7
+        $gptPromptParam = 'Your responses should be a sentence or two, unless the user’s request requires reasoning or long-form outputs. You\'ll give me the output under a JSON format, like this example : {
+            "Description": "Harley Queen, the enigmatic Queen of Chaos, strides through the shadows in an elegant black leather jumpsuit with purple accents. With her mischievous smile and piercing green eyes, she brandishes a pair of electrified tonfas, crackling with power. Her hair, a vibrant mix of crimson and platinum, cascades down her back, reflecting her dual nature. Beneath her enigmatic allure lies a mysterious past of loyalty, betrayal and vengeance.",
+            "Attacks": ["Attack 1: Fulgurante Explosion - Super Blast generates a devastating blast of explosive energy that pulverizes its opponents.", "
+            Attack 2: Celestial Detonation - Super Blast channels his explosive power to create a devastating shockwave that annihilates his enemies."],
+            "Characteristics": {
+                "Strength": 8,
+                "Endurance": 7,
+                "Intelligence": 6,
+                "Agility": 7
             }
-        }";
+        }. Make sure you put the simple quotation marks in the right places and to follow strictly a Json format that will be decoded with PHP json_decode function.';
 
         $prompt = Fighter::makeFighterPrompt($name, $description, $type);
         $fighterDescription = $this->callGPT($prompt . " " . $gptPromptParam);
         $data = json_decode($fighterDescription, true);
-        dd($data);
+
         // LAST API MODIF
-        $translatePrompt = $fighterDescription;
-        $translateDescription = $this->callDeepL($translatePrompt);
+        $translatePrompt1 = $data['Description'];
+        $translatePrompt2 = $data['Attacks'][0];
+        $translatePrompt3 = $data['Attacks'][1];
+
+        $translateDescription = $this->callDeepL($translatePrompt1);
+        $attackName1 = $this->callDeepL($translatePrompt2);
+        $attackName2 = $this->callDeepL($translatePrompt3);
 
         // Add modifs after Cartoon colors
         //$avatarData = $this->callSegmind($fighterDescription . " hd, 4k, artwork, sharp focus, illustration, highly detailed, digital painting, concept art, matte, masterpiece, full body pose");
-        $avatarData = $this->callSegmind($fighterDescription . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors, full body card game style, Magic The Gathering character style, fighter in action");
+        $avatarData = $this->callSegmind($data['Description'] . " digital artwork, highly detailed, high definitions, masterpiece, high definition, 8k, bokeh, sharp focus, matte, card game style, video game style, creative, cartoon colors, full body card game style, Magic The Gathering character style, fighter in action");
         $filePath = Fighter::saveFighterAvatar($avatarData);
 
         $hp = Fighter::generateFighterHp();
         $attack1 = floor(rand(100, $hp) / 2);
         $attack2 = floor(rand(100, 300));
         //$attack2 = floor(($hp - $attack1) / 2);
-
-        $attackName1 = $this->callGPT($gptPromptParam . " En 20 mots, Génère moi 1 'Attaque 1 : ' et sa description, basées sur cette description du combattant : $translateDescription.");
-        $attackName2 = $this->callGPT($gptPromptParam . " En 20 mots, Génère moi 1 'Attaque 2 : ' et sa description, basées sur cette description du combattant : $translateDescription. (Différente de $attackName1)");
 
         $fighter = Fighter::query()->create([
             'name' => $name,
