@@ -103,12 +103,12 @@ option {
     border: 2px solid black;
 }
 
-.bxs-home, .bxs-invader, .bxs-book-content, .bxs-user, .bx-power-off, .bxs-store {
+.bxs-home, .bxs-invader, .bxs-book-content, .bxs-user, .bx-power-off, .bxs-store, .bx-message-dots {
     margin-top: 13px;
     margin-left: 5px;
 }
 
-.bx-money-withdraw, .bxs-trash, .bx-arrow-from-top, .bx-cart-add {
+.bx-money-withdraw, .bxs-trash, .bx-arrow-from-top, .bx-cart-add, .bx-message-dots {
     font-size: 24px;
     margin-right: 10px;
 }

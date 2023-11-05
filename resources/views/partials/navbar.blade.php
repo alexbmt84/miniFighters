@@ -77,6 +77,18 @@
 
             @auth()
                 <ul class="navbar-nav">
+
+                <a href="{{ route('chatify') }}" class="">
+                    <i class='bx bx-message-dots text-white'></i>
+                </a>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('chatify') }}">Messages</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link">|</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link text-white"><i class='bx bx-wallet text-white'></i> {{ auth()->user()->wallet }} cr</a>
                 </li>
