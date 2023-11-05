@@ -24,7 +24,7 @@ background: linear-gradient(180deg, rgba(33,33,33,1) 0%, rgba(0,0,0,1) 57%, rgba
 
 <div class="profile-pic2">
 
-    <img src="{{asset($user->avatar)}}" alt="My Test Image" id="output" width="150px" />
+    <img src="/storage/{{ $user->avatar }}" alt="My Test Image" id="output" width="150px" />
 
 </div>
 
