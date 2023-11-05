@@ -12,7 +12,10 @@ class DeepLService
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Client([
+            // Disable SSL Verification
+            'verify' => false,
+        ]);
     }
 
     public function translateWithDeepl($text, $targetLang = 'FR')
@@ -25,7 +28,10 @@ class DeepLService
             'Content-Type' => 'application/json',
         ];
 
-        $response = Http::withHeaders($headers)->post($apiURL, [
+        // Pass the 'verify' option to disable SSL verification
+        $response = Http::withOptions([
+            'verify' => false,
+        ])->withHeaders($headers)->post($apiURL, [
             'text' => [$text],
             'target_lang' => $targetLang
         ]);

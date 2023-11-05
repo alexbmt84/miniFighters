@@ -10,7 +10,10 @@ class AvatarService
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Client([
+            // Disable SSL Verification
+            'verify' => false,
+        ]);
     }
 
     public function kandinskyRequest($prompt)
